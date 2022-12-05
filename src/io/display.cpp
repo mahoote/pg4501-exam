@@ -13,7 +13,7 @@ void Display::initTft()
     tft->setSwapBytes(true);
     tft->fillScreen(TFT_WHITE);
 
-    screenSprite->createSprite(screenSizeWidth, screenSizeHeight);
+    screenSprite->createSprite(SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 TFT_eSPI *Display::getTft()

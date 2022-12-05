@@ -4,8 +4,8 @@
 #ifndef __DISPLAY_H__
 #define __DISPLAY_H__
 
-#define screenSizeHeight 240
-#define screenSizeWidth 135
+#define SCREEN_HEIGHT 240
+#define SCREEN_WIDTH 135
 
 class Display
 {
