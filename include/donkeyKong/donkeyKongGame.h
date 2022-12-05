@@ -11,8 +11,8 @@
 class DonkeyKongGame
 {
 public:
-    void initDisplay(TFT_eSPI *tft);
-    void play(TFT_eSprite *screenSprite, Joystick *joystick);
+    void init();
+    void play(Joystick *joystick);
 
 private:
     void movement(int *stickValueX, int *stickValueY);

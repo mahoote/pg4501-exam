@@ -1,13 +1,13 @@
 #include <Arduino.h>
 
 #include "io/display.h"
+#include "io/memory.h"
 #include "io/joystick.h"
 #include "donkeyKong/donkeyKongGame.h"
-#include "donkeyKong/donkeyKongSprites.h"
 
 #include <TFT_eSPI.h>
 
-int playerPositionX = 1;
+int playerPositionX = 0;
 int playerPositionY = 0;
 
 short gravity = 7;
@@ -20,21 +20,25 @@ bool isJumping = false;
 unsigned int jumpCurrentValue = 0;
 unsigned int jumpMaxTime = 8;
 
-DonkeyKongSprites donkeyKongSprites;
-
 // TODO: screenSizeHeight - MARIO_SIZE_Y make variable
 
-void DonkeyKongGame::initDisplay(TFT_eSPI *tft)
-{
-    Serial.println("Init display");
+Display display;
+Memory memory("/pg4501_exam/Sprites/Donkey_Kong_Game");
 
-    tft->init();
-    tft->setSwapBytes(true);
-    tft->fillScreen(TFT_WHITE);
+TFT_eSprite marioIdleSprite = TFT_eSprite(display.getTft());
+SpriteImage marioIdleSpriteImage;
+
+void DonkeyKongGame::init()
+{
+    display.initTft();
+    memory.initSD();
+    memory.initSprite("/Mario/Mario_Idle_Right", &marioIdleSprite, &marioIdleSpriteImage);
 }
 
-void DonkeyKongGame::play(TFT_eSprite *screenSprite, Joystick *joystick)
+void DonkeyKongGame::play(Joystick *joystick)
 {
+    TFT_eSprite *screenSprite = display.getScreenSprite();
+
     int *stickValueX = &joystick->stickValueX;
     int *stickValueY = &joystick->stickValueY;
     joystick->setJoystickValues();
@@ -42,12 +46,10 @@ void DonkeyKongGame::play(TFT_eSprite *screenSprite, Joystick *joystick)
     movement(stickValueX, stickValueY);
 
     // Background.
-    screenSprite->createSprite(screenSizeWidth, screenSizeHeight);
-    screenSprite->setSwapBytes(true);
     screenSprite->fillScreen(TFT_WHITE);
 
     // Player / Mario.
-    screenSprite->pushImage(playerPositionX, playerPositionY, MARIO_SIZE_X, MARIO_SIZE_Y, donkeyKongSprites.mario_standing_01);
+    display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioIdleSprite, &marioIdleSpriteImage);
 
     screenSprite->pushSprite(0, 0);
 }

@@ -8,9 +8,6 @@
 #include "donkeyKong/donkeyKongGame.h"
 #include "io/joystick.h"
 
-TFT_eSPI tft = TFT_eSPI();
-TFT_eSprite screenSprite = TFT_eSprite(&tft);
-
 Joystick joystick;
 DonkeyKongGame donkeyKongGame;
 
@@ -22,10 +19,10 @@ void setup()
 
   joystick.initJoystick();
 
-  donkeyKongGame.initDisplay(&tft);
+  donkeyKongGame.init();
 }
 
 void loop()
 {
-  donkeyKongGame.play(&screenSprite, &joystick);
+  donkeyKongGame.play(&joystick);
 }
