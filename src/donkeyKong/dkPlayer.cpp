@@ -1,30 +1,34 @@
 #include "donkeyKong/dkPlayer.h"
 
-int playerPositionX = 0;
-int playerPositionY = 0;
-
-short gravity = 7;
-short jumpSpeed = 4;
-short playerSpeed = 2;
-
-bool isGrounded = false;
-bool isJumping = false;
-
-unsigned int jumpCurrentValue = 0;
-unsigned int jumpMaxTime = 8;
-
-short lastInputValueX = 1;
+int playerPositionX = 0,
+    playerPositionY = 0;
+short gravity = 5,
+      jumpSpeed = 4,
+      playerSpeed = 2;
+bool isGrounded = false,
+     isJumping = false;
+unsigned int jumpCurrentValue = 0,
+             jumpMaxTime = 8;
+short lastInputValueX = 1,
+      frameCounter = 0,
+      changeSpriteAfterFrames = 4;
 
 TFT_eSprite marioIdleRightSprite = TFT_eSprite(display.getTft());
-SpriteImage marioIdleRightSpriteImage;
-
 TFT_eSprite marioIdleLeftSprite = TFT_eSprite(display.getTft());
-SpriteImage marioIdleLeftSpriteImage;
+TFT_eSprite marioJumpLeftSprite = TFT_eSprite(display.getTft());
+TFT_eSprite marioJumpRightSprite = TFT_eSprite(display.getTft());
+
+SpriteImage marioIdleRightSpriteImage,
+    marioIdleLeftSpriteImage,
+    marioJumpLeftSpriteImage,
+    marioJumpRightSpriteImage;
 
 void DK_Player::init()
 {
     memory.initSprite("/Donkey_Kong_Game/Mario/Mario_Idle_Right", &marioIdleRightSprite, &marioIdleRightSpriteImage);
     memory.initSprite("/Donkey_Kong_Game/Mario/Mario_Idle_Left", &marioIdleLeftSprite, &marioIdleLeftSpriteImage);
+    memory.initSprite("/Donkey_Kong_Game/Mario/Mario_Jump_Left", &marioJumpLeftSprite, &marioJumpLeftSpriteImage);
+    memory.initSprite("/Donkey_Kong_Game/Mario/Mario_Jump_Right", &marioJumpRightSprite, &marioJumpRightSpriteImage);
 }
 
 void DK_Player::movement(int *stickValueX, int *stickValueY)
@@ -36,10 +40,37 @@ void DK_Player::movement(int *stickValueX, int *stickValueY)
     movementJump(stickValueY);
     enableGravity();
 
+    frameCounter++;
+
+    if (frameCounter > changeSpriteAfterFrames * 2)
+        frameCounter = 0;
+
+    // Right
     if (lastInputValueX > 0)
-        display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioIdleRightSprite, &marioIdleRightSpriteImage);
+    {
+        if (frameCounter > changeSpriteAfterFrames &&
+            frameCounter < (changeSpriteAfterFrames * 2) && *stickValueX != 0)
+        {
+            display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioJumpRightSprite, &marioJumpRightSpriteImage);
+        }
+        else
+        {
+            display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioIdleRightSprite, &marioIdleRightSpriteImage);
+        }
+    }
+    // Left
     else if (lastInputValueX < 0)
-        display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioIdleLeftSprite, &marioIdleLeftSpriteImage);
+    {
+        if (frameCounter > changeSpriteAfterFrames &&
+            frameCounter < (changeSpriteAfterFrames * 2) && *stickValueX != 0)
+        {
+            display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioJumpLeftSprite, &marioJumpLeftSpriteImage);
+        }
+        else
+        {
+            display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioIdleLeftSprite, &marioIdleLeftSpriteImage);
+        }
+    }
 }
 
 void DK_Player::movementHorizontally(int *stickValueX)
