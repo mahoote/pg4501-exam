@@ -1,8 +1,8 @@
+/* TODO: screenSizeHeight - MARIO_SIZE_Y make variable */
+
 #include <Arduino.h>
 
 #include "io/display.h"
-#include "io/memory.h"
-#include "io/joystick.h"
 #include "donkeyKong/donkeyKongGame.h"
 
 #include <TFT_eSPI.h>
@@ -20,28 +20,34 @@ bool isJumping = false;
 unsigned int jumpCurrentValue = 0;
 unsigned int jumpMaxTime = 8;
 
-// TODO: screenSizeHeight - MARIO_SIZE_Y make variable
+short lastInputValueX = 1;
 
 Display display;
-Memory memory("/pg4501_exam/Sprites/Donkey_Kong_Game");
 
-TFT_eSprite marioIdleSprite = TFT_eSprite(display.getTft());
-SpriteImage marioIdleSpriteImage;
+TFT_eSprite marioIdleRightSprite = TFT_eSprite(display.getTft());
+SpriteImage marioIdleRightSpriteImage;
 
-void DonkeyKongGame::init()
+TFT_eSprite marioIdleLeftSprite = TFT_eSprite(display.getTft());
+SpriteImage marioIdleLeftSpriteImage;
+
+void DonkeyKongGame::init(Memory *memory)
 {
     display.initTft();
-    memory.initSD();
-    memory.initSprite("/Mario/Mario_Idle_Right", &marioIdleSprite, &marioIdleSpriteImage);
+    memory->initSD();
+    memory->initSprite("/Donkey_Kong_Game/Mario/Mario_Idle_Right", &marioIdleRightSprite, &marioIdleRightSpriteImage);
+    memory->initSprite("/Donkey_Kong_Game/Mario/Mario_Idle_Left", &marioIdleLeftSprite, &marioIdleLeftSpriteImage);
 }
 
 void DonkeyKongGame::play(Joystick *joystick)
 {
     TFT_eSprite *screenSprite = display.getScreenSprite();
 
+    joystick->setJoystickValues();
     int *stickValueX = &joystick->stickValueX;
     int *stickValueY = &joystick->stickValueY;
-    joystick->setJoystickValues();
+
+    if (lastInputValueX != *stickValueX && *stickValueX != 0)
+        lastInputValueX = *stickValueX;
 
     movement(stickValueX, stickValueY);
 
@@ -49,7 +55,10 @@ void DonkeyKongGame::play(Joystick *joystick)
     screenSprite->fillScreen(TFT_WHITE);
 
     // Player / Mario.
-    display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioIdleSprite, &marioIdleSpriteImage);
+    if (lastInputValueX > 0)
+        display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioIdleRightSprite, &marioIdleRightSpriteImage);
+    else if (lastInputValueX < 0)
+        display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioIdleLeftSprite, &marioIdleLeftSpriteImage);
 
     screenSprite->pushSprite(0, 0);
 }

@@ -4,10 +4,11 @@
 #include "Adafruit_EPD.h"
 #include "Adafruit_SPIFlash.h"
 
-#include "io/display.h"
-#include "donkeyKong/donkeyKongGame.h"
+#include "io/memory.h"
 #include "io/joystick.h"
+#include "donkeyKong/donkeyKongGame.h"
 
+Memory memory("/pg4501_exam/Sprites");
 Joystick joystick;
 DonkeyKongGame donkeyKongGame;
 
@@ -15,11 +16,8 @@ void setup()
 {
   Serial.begin(115200);
 
-  Serial.println("Setup");
-
   joystick.initJoystick();
-
-  donkeyKongGame.init();
+  donkeyKongGame.init(&memory);
 }
 
 void loop()

@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "io/joystick.h"
+#include "io/memory.h"
 #include <TFT_eSPI.h>
 
 #ifndef __DONKEY_KONG_GAME_H__
@@ -11,7 +12,7 @@
 class DonkeyKongGame
 {
 public:
-    void init();
+    void init(Memory *m);
     void play(Joystick *joystick);
 
 private:

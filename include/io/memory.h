@@ -13,12 +13,12 @@ public:
     void initSD();
     void initSprite(String localGamePath, TFT_eSprite *sprite, SpriteImage *spriteImage);
     String *getSdSpriteGamePath();
+    void setSdSpriteGamePath(String path);
 
 private:
     void loadBitmapImage(String *localGamePath, SpriteImage *spriteImage);
     void setImageBytes(TFT_eSprite *sprite, SpriteImage *spriteImage);
     int getImageCanvasFormat(Adafruit_Image *image);
-    void setSdSpriteGamePath(String path);
     String sdSpriteGamePath;
 };
 
