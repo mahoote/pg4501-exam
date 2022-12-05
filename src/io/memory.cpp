@@ -69,7 +69,7 @@ void Memory::setImageBytes(TFT_eSprite *sprite, SpriteImage *spriteImage)
         spriteImage->setHeight(image->height());
 
         sprite->createSprite(*spriteImage->getWidth(), *spriteImage->getHeight());
-        sprite->setSwapBytes(true);
+        // sprite->setSwapBytes(true);
 
         if (getImageCanvasFormat(image) == 3)
         {
