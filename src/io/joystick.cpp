@@ -1,13 +1,6 @@
 #include <Arduino.h>
 #include "io/joystick.h"
 
-// Public Variables
-
-int stickValueX = 0;
-int stickValueY = 0;
-
-// Private Variables
-
 int VRxPin = A0;
 int VRyPin = A1;
 int SW_Pin = 9;
@@ -39,4 +32,14 @@ void Joystick::setJoystickValues()
     // Serial.print(stickValueY);
     // Serial.print(" | Button: ");
     // Serial.println(stickBtnState);
+}
+
+int *Joystick::getStickValueX()
+{
+    return &stickValueX;
+}
+
+int *Joystick::getStickValueY()
+{
+    return &stickValueY;
 }

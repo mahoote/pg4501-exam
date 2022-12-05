@@ -15,14 +15,9 @@ void DonkeyKongGame::init()
 void DonkeyKongGame::play()
 {
     TFT_eSprite *screenSprite = display.getScreenSprite();
-
     joystick.setJoystickValues();
-    int *stickValueX = &joystick.stickValueX;
-    int *stickValueY = &joystick.stickValueY;
 
     screenSprite->fillScreen(TFT_WHITE);
-
-    player.movement(stickValueX, stickValueY);
-
+    player.movement();
     screenSprite->pushSprite(0, 0);
 }

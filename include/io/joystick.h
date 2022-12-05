@@ -8,8 +8,12 @@ class Joystick
 public:
     void initJoystick();
     void setJoystickValues();
-    int stickValueX;
-    int stickValueY;
+    int *getStickValueX();
+    int *getStickValueY();
+
+private:
+    int stickValueX = 0;
+    int stickValueY = 0;
 };
 
 #endif

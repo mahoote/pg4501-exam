@@ -1,7 +1,9 @@
 #include "donkeyKong/dkPlayer.h"
 
 int playerPositionX = 0,
-    playerPositionY = 0;
+    playerPositionY = 0,
+    stickValueX,
+    stickValueY;
 short gravity = 5,
       jumpSpeed = 4,
       playerSpeed = 2;
@@ -31,15 +33,23 @@ void DK_Player::init()
     memory.initSprite("/Donkey_Kong_Game/Mario/Mario_Jump_Right", &marioJumpRightSprite, &marioJumpRightSpriteImage);
 }
 
-void DK_Player::movement(int *stickValueX, int *stickValueY)
+void DK_Player::movement()
 {
-    if (lastInputValueX != *stickValueX && *stickValueX != 0)
-        lastInputValueX = *stickValueX;
+    stickValueX = *joystick.getStickValueX();
+    stickValueY = *joystick.getStickValueY();
 
-    movementHorizontally(stickValueX);
-    movementJump(stickValueY);
+    if (lastInputValueX != stickValueX && stickValueX != 0)
+        lastInputValueX = stickValueX;
+
+    movementHorizontally();
+    movementJump();
     enableGravity();
 
+    renderSprites();
+}
+
+void DK_Player::renderSprites()
+{
     frameCounter++;
 
     if (frameCounter > changeSpriteAfterFrames * 2)
@@ -49,7 +59,7 @@ void DK_Player::movement(int *stickValueX, int *stickValueY)
     if (lastInputValueX > 0)
     {
         if (frameCounter > changeSpriteAfterFrames &&
-            frameCounter < (changeSpriteAfterFrames * 2) && *stickValueX != 0)
+            frameCounter < (changeSpriteAfterFrames * 2) && stickValueX != 0)
         {
             display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioJumpRightSprite, &marioJumpRightSpriteImage);
         }
@@ -62,7 +72,7 @@ void DK_Player::movement(int *stickValueX, int *stickValueY)
     else if (lastInputValueX < 0)
     {
         if (frameCounter > changeSpriteAfterFrames &&
-            frameCounter < (changeSpriteAfterFrames * 2) && *stickValueX != 0)
+            frameCounter < (changeSpriteAfterFrames * 2) && stickValueX != 0)
         {
             display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioJumpLeftSprite, &marioJumpLeftSpriteImage);
         }
@@ -71,30 +81,35 @@ void DK_Player::movement(int *stickValueX, int *stickValueY)
             display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioIdleLeftSprite, &marioIdleLeftSpriteImage);
         }
     }
+    // Something is wrong
+    else
+    {
+        display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioIdleRightSprite, &marioIdleRightSpriteImage);
+    }
 }
 
-void DK_Player::movementHorizontally(int *stickValueX)
+void DK_Player::movementHorizontally()
 {
     // Right
-    if (*stickValueX > 0 && playerPositionX < SCREEN_WIDTH - 24)
+    if (stickValueX > 0 && playerPositionX < SCREEN_WIDTH - 24)
     {
         playerPositionX = playerPositionX + playerSpeed;
     }
     // Left
-    else if (*stickValueX < 0 && playerPositionX > 0)
+    else if (stickValueX < 0 && playerPositionX > 0)
     {
         playerPositionX = playerPositionX - playerSpeed;
     }
 }
 
-void DK_Player::movementJump(int *stickValueY)
+void DK_Player::movementJump()
 {
     if (isJumping)
     {
         timeInAirDelay();
     }
 
-    if (*stickValueY < 0 && isGrounded && !isJumping)
+    if (stickValueY < 0 && isGrounded && !isJumping)
     {
         isJumping = true;
     }

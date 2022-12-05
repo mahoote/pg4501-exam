@@ -10,12 +10,13 @@ class DK_Player
 {
 public:
     void init();
-    void movement(int *stickValueX, int *stickValueY);
+    void movement();
 
 private:
+    void renderSprites();
     void timeInAirDelay();
-    void movementHorizontally(int *stickValueX);
-    void movementJump(int *stickValueY);
+    void movementHorizontally();
+    void movementJump();
     void enableGravity();
 };
 
