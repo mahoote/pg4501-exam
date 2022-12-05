@@ -6,19 +6,19 @@
 
 DK_Player player;
 
-void DonkeyKongGame::init(Memory *memory)
+void DonkeyKongGame::init()
 {
-    memory->initSD();
-    player.init(memory);
+    memory.initSD();
+    player.init();
 }
 
-void DonkeyKongGame::play(Joystick *joystick)
+void DonkeyKongGame::play()
 {
     TFT_eSprite *screenSprite = display.getScreenSprite();
 
-    joystick->setJoystickValues();
-    int *stickValueX = &joystick->stickValueX;
-    int *stickValueY = &joystick->stickValueY;
+    joystick.setJoystickValues();
+    int *stickValueX = &joystick.stickValueX;
+    int *stickValueY = &joystick.stickValueY;
 
     screenSprite->fillScreen(TFT_WHITE);
 

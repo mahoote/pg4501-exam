@@ -27,9 +27,6 @@ void Joystick::setJoystickValues()
 {
     stickPositionX = analogRead(VRxPin);
 
-    // Serial.print("Stick Postition X: ");
-    // Serial.println(stickPositionX);
-
     stickPositionY = analogRead(VRyPin);
     stickBtnState = digitalRead(SW_Pin);
 

@@ -21,10 +21,10 @@ SpriteImage marioIdleRightSpriteImage;
 TFT_eSprite marioIdleLeftSprite = TFT_eSprite(display.getTft());
 SpriteImage marioIdleLeftSpriteImage;
 
-void DK_Player::init(Memory *memory)
+void DK_Player::init()
 {
-    memory->initSprite("/Donkey_Kong_Game/Mario/Mario_Idle_Right", &marioIdleRightSprite, &marioIdleRightSpriteImage);
-    memory->initSprite("/Donkey_Kong_Game/Mario/Mario_Idle_Left", &marioIdleLeftSprite, &marioIdleLeftSpriteImage);
+    memory.initSprite("/Donkey_Kong_Game/Mario/Mario_Idle_Right", &marioIdleRightSprite, &marioIdleRightSpriteImage);
+    memory.initSprite("/Donkey_Kong_Game/Mario/Mario_Idle_Left", &marioIdleLeftSprite, &marioIdleLeftSpriteImage);
 }
 
 void DK_Player::movement(int *stickValueX, int *stickValueY)

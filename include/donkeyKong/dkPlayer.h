@@ -9,7 +9,7 @@
 class DK_Player
 {
 public:
-    void init(Memory *memory);
+    void init();
     void movement(int *stickValueX, int *stickValueY);
 
 private:

@@ -5,14 +5,12 @@
 #include "Adafruit_SPIFlash.h"
 
 #include "main.h"
-
-#include "io/memory.h"
-#include "io/joystick.h"
 #include "donkeyKong/donkeyKongGame.h"
 
 Memory memory("/pg4501_exam/Sprites");
 Display display;
 Joystick joystick;
+
 DonkeyKongGame donkeyKongGame;
 
 void setup()
@@ -21,10 +19,10 @@ void setup()
 
   display.initTft();
   joystick.initJoystick();
-  donkeyKongGame.init(&memory);
+  donkeyKongGame.init();
 }
 
 void loop()
 {
-  donkeyKongGame.play(&joystick);
+  donkeyKongGame.play();
 }
