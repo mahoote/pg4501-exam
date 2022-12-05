@@ -58,27 +58,41 @@ void DK_Player::renderSprites()
     // Right
     if (lastInputValueX > 0)
     {
-        if (frameCounter > changeSpriteAfterFrames &&
-            frameCounter < (changeSpriteAfterFrames * 2) && stickValueX != 0)
+        if (!isGrounded || isJumping)
         {
             display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioJumpRightSprite, &marioJumpRightSpriteImage);
         }
         else
         {
-            display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioIdleRightSprite, &marioIdleRightSpriteImage);
+            if (frameCounter > changeSpriteAfterFrames &&
+                frameCounter < (changeSpriteAfterFrames * 2) && stickValueX != 0)
+            {
+                display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioJumpRightSprite, &marioJumpRightSpriteImage);
+            }
+            else
+            {
+                display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioIdleRightSprite, &marioIdleRightSpriteImage);
+            }
         }
     }
     // Left
     else if (lastInputValueX < 0)
     {
-        if (frameCounter > changeSpriteAfterFrames &&
-            frameCounter < (changeSpriteAfterFrames * 2) && stickValueX != 0)
+        if (!isGrounded || isJumping)
         {
             display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioJumpLeftSprite, &marioJumpLeftSpriteImage);
         }
         else
         {
-            display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioIdleLeftSprite, &marioIdleLeftSpriteImage);
+            if (frameCounter > changeSpriteAfterFrames &&
+                frameCounter < (changeSpriteAfterFrames * 2) && stickValueX != 0)
+            {
+                display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioJumpLeftSprite, &marioJumpLeftSpriteImage);
+            }
+            else
+            {
+                display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioIdleLeftSprite, &marioIdleLeftSpriteImage);
+            }
         }
     }
     // Something is wrong
@@ -138,6 +152,7 @@ void DK_Player::enableGravity()
 
 void DK_Player::timeInAirDelay()
 {
+    // Move player up
     playerPositionY = playerPositionY - jumpSpeed;
 
     if (jumpCurrentValue++ >= jumpMaxTime)
