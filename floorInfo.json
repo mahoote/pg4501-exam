@@ -1,3 +1,7 @@
 {
-    "floorOne": 56 
+    "floorOne": {
+        "slopeStart": 56,
+        "latterStart": 105,
+        "latterEnd": 115
+    } 
 }

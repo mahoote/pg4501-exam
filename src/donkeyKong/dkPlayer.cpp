@@ -4,7 +4,8 @@ int prevPlayerPositionX = 0,
     prevPlayerPositionY = 0,
     stickValueX,
     stickValueY,
-    playerPlatformY = 0;
+    playerPlatformY = 0,
+    frameCounter = 0;
 
 unsigned int jumpCurrentValue = 0,
              jumpMaxTime = 8;
@@ -16,11 +17,10 @@ short gravity = 5,
       playerWidth;
 
 short lastInputValueX = 1,
-      frameCounter = 0,
       changeSpriteAfterFrames = 4;
 
 bool isGrounded = false, isJumping = false,
-     playerLeft = false, playerRight = false;
+     playerLeft = false, playerRight = false, playerUp = false, playerDown = false;
 
 TFT_eSprite marioIdleLeftSprite = TFT_eSprite(display.getTft());
 TFT_eSprite marioIdleRightSprite = TFT_eSprite(display.getTft());
@@ -53,7 +53,7 @@ void DK_Player::init()
 void DK_Player::movement()
 {
     playerPlatform.getPlayerValues(&playerPositionX, &playerPositionY, &addPlatformYValue,
-                                   &isMovingX, &playerLeft, &playerRight);
+                                   &isMovingX, &isMovingY, &playerLeft, &playerRight, &playerUp, &playerDown, &gravityEnabled);
 
     stickValueX = *joystick.getStickValueX();
     stickValueY = *joystick.getStickValueY();
@@ -63,33 +63,29 @@ void DK_Player::movement()
 
     renderSprites();
 
+    playerPlatform.changePlatformY();
+
     addPlatformYValue = *playerPlatform.getAddPlatformYValue();
     playerPlatformY = SCREEN_HEIGHT - playerHeight - addPlatformYValue;
 
-    movementHorizontally();
-    movementJump();
-    enableGravity();
+    movementVertically();
+
+    gravityEnabled = *playerPlatform.getGravityEnabled();
+    if (gravityEnabled)
+    {
+        movementHorizontally();
+        // movementJump();
+        enableGravity();
+    }
 
     Serial.print(F("Player pos x: "));
     Serial.print(playerPositionX);
     Serial.print(F(", Player pos y: "));
     Serial.print(playerPositionY);
-    // Serial.print(F(", Player left: "));
-    // Serial.print(playerLeft);
-    // Serial.print(F(", Player right: "));
-    // Serial.print(playerRight);
-    // Serial.print(F(", is moving: "));
-    // Serial.print(isMoving);
-    Serial.print(F(", is moving x: "));
-    Serial.print(isMovingX);
-    // Serial.print(F(", is moving y: "));
-    // Serial.println(isMovingY);
-    Serial.print(F(", addPlatformYValue: "));
-    Serial.print(addPlatformYValue);
-    Serial.print(F(", player right: "));
-    Serial.print(playerRight);
-    Serial.print(F(", player left: "));
-    Serial.println(playerLeft);
+    Serial.print(F(", Player up: "));
+    Serial.print(playerUp);
+    Serial.print(F(", Player down: "));
+    Serial.println(playerDown);
 
     isMoving = false;
     isMovingX = false;
@@ -103,8 +99,6 @@ void DK_Player::movement()
 
     if (prevPlayerPositionY != playerPositionY)
         isMovingY = true;
-
-    playerPlatform.changePlatformY();
 
     // Must be at the bottom.
     prevPlayerPositionX = playerPositionX;
@@ -125,7 +119,7 @@ void DK_Player::renderSprites()
         playerLeft = false;
 
         TFT_eSprite *sprites[] = {&marioIdleRightSprite, &marioWalkRightSprite, &marioJumpRightSprite};
-        SpriteImage *spriteImages[] = {&marioJumpRightSpriteImage, &marioWalkRightSpriteImage, &marioIdleRightSpriteImage};
+        SpriteImage *spriteImages[] = {&marioIdleRightSpriteImage, &marioWalkRightSpriteImage, &marioJumpRightSpriteImage};
 
         moveDirectionX(sprites, spriteImages);
     }
@@ -136,7 +130,7 @@ void DK_Player::renderSprites()
         playerRight = false;
 
         TFT_eSprite *sprites[] = {&marioIdleLeftSprite, &marioWalkLeftSprite, &marioJumpLeftSprite};
-        SpriteImage *spriteImages[] = {&marioJumpLeftSpriteImage, &marioWalkLeftSpriteImage, &marioIdleLeftSpriteImage};
+        SpriteImage *spriteImages[] = {&marioIdleLeftSpriteImage, &marioWalkLeftSpriteImage, &marioJumpLeftSpriteImage};
 
         moveDirectionX(sprites, spriteImages);
     }
@@ -190,6 +184,31 @@ void DK_Player::movementHorizontally()
     }
 }
 
+void DK_Player::movementVertically()
+{
+    if (stickValueY < 0)
+    {
+        playerUp = true;
+        playerDown = false;
+    }
+    else if (stickValueY > 0)
+    {
+        playerUp = false;
+        playerDown = true;
+    }
+    else
+    {
+        playerUp = false;
+        playerDown = false;
+    }
+
+    if (isGrounded && !isJumping)
+    {
+        // Make sure player is on platform when grounded.
+        playerPositionY = playerPlatformY;
+    }
+}
+
 void DK_Player::movementJump()
 {
     if (isJumping)
@@ -211,13 +230,12 @@ void DK_Player::enableGravity()
         {
             playerPositionY = playerPositionY + gravity;
         }
-    }
-
-    // Reset ground position if too far down.
-    if (playerPositionY >= playerPlatformY)
-    {
-        isGrounded = true;
-        playerPositionY = playerPlatformY;
+        // Reset ground position if too far down.
+        if (playerPositionY >= playerPlatformY)
+        {
+            isGrounded = true;
+            playerPositionY = playerPlatformY;
+        }
     }
 
     if (prevPlayerPositionY != playerPositionY)

@@ -19,6 +19,7 @@ private:
     void renderSprites();
     void timeInAirDelay();
     void movementHorizontally();
+    void movementVertically();
     void movementJump();
     void enableGravity();
 
@@ -27,7 +28,7 @@ private:
         // How mutch the player position Y should increase or decrease.
         addPlatformYValue = 8;
 
-    bool isMoving, isMovingX, isMovingY;
+    bool isMoving, isMovingX, isMovingY, gravityEnabled = true;
 };
 
 #endif

@@ -56,9 +56,11 @@ void FPS::limitFPS(float *_startMillis)
 {
     float frameMillis = millis() - *_startMillis;
 
-    if (1000.0f / maxFPS > frameMillis)
+    float millisPerFrame = 1000.0f / maxFPS;
+
+    if (millisPerFrame > frameMillis)
     {
-        delay(1000.0f / maxFPS - frameMillis);
+        delay(millisPerFrame - frameMillis);
     }
 }
 

@@ -9,11 +9,16 @@ public:
     void getPlayerValues(int *_playerPositionX,
                          int *_playerPositionY,
                          int *_addPlatformYValue,
-                         bool *_isMoving,
+                         bool *_isMovingX,
+                         bool *_isMovingY,
                          bool *_playerLeft,
-                         bool *_playerRight);
+                         bool *_playerRight,
+                         bool *_playerUp,
+                         bool *_playerDown,
+                         bool *_gravityEnabled);
     void changePlatformY();
     int *getAddPlatformYValue();
+    bool *getGravityEnabled();
 
 private:
     int *playerPositionX,
@@ -21,8 +26,12 @@ private:
         *addPlatformYValue;
 
     bool *isMovingX,
+        *isMovingY,
         *playerLeft,
-        *playerRight;
+        *playerRight,
+        *playerUp,
+        *playerDown,
+        *gravityEnabled;
 };
 
 #endif
