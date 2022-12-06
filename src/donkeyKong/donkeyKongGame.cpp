@@ -1,12 +1,6 @@
 /* TODO: screenSizeHeight - MARIO_SIZE_Y make variable */
 
-#include <Arduino.h>
-
 #include "donkeyKong/donkeyKongGame.h"
-
-DK_Player player;
-
-SpriteImage donkeyKongBackgroundImage;
 
 void DonkeyKongGame::init()
 {

@@ -12,6 +12,10 @@ class DonkeyKongGame
 public:
     void init();
     void play();
+
+private:
+    DK_Player player;
+    SpriteImage donkeyKongBackgroundImage;
 };
 
 #endif

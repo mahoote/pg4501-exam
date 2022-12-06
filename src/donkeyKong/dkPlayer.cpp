@@ -1,14 +1,10 @@
 #include "donkeyKong/dkPlayer.h"
 
-int playerPositionX = 0,
-    playerPositionY = 0,
-    prevPlayerPositionX = 0,
+int prevPlayerPositionX = 0,
     prevPlayerPositionY = 0,
     stickValueX,
     stickValueY,
-    playerPlatformY = 0,
-    // How mutch the player position Y should increase or decrease.
-    addPlatformYValue = 8;
+    playerPlatformY = 0;
 
 unsigned int jumpCurrentValue = 0,
              jumpMaxTime = 8;
@@ -23,9 +19,7 @@ short lastInputValueX = 1,
       frameCounter = 0,
       changeSpriteAfterFrames = 4;
 
-bool isGrounded = false,
-     isJumping = false,
-     isMoving = false,
+bool isGrounded = false, isJumping = false,
      playerLeft = false, playerRight = false;
 
 TFT_eSprite marioIdleLeftSprite = TFT_eSprite(display.getTft());
@@ -44,6 +38,8 @@ SpriteImage marioIdleRightSpriteImage,
     marioJumpLeftSpriteImage,
     marioJumpRightSpriteImage;
 
+DK_PlayerPlatform playerPlatform;
+
 void DK_Player::init()
 {
     memory.initSprite("/Donkey_Kong_Game/Mario/Mario_Idle_Right", &marioIdleRightSprite, &marioIdleRightSpriteImage);
@@ -56,6 +52,9 @@ void DK_Player::init()
 
 void DK_Player::movement()
 {
+    playerPlatform.getPlayerValues(&playerPositionX, &playerPositionY, &addPlatformYValue,
+                                   &isMovingX, &playerLeft, &playerRight);
+
     stickValueX = *joystick.getStickValueX();
     stickValueY = *joystick.getStickValueY();
 
@@ -64,6 +63,7 @@ void DK_Player::movement()
 
     renderSprites();
 
+    addPlatformYValue = *playerPlatform.getAddPlatformYValue();
     playerPlatformY = SCREEN_HEIGHT - playerHeight - addPlatformYValue;
 
     movementHorizontally();
@@ -74,17 +74,37 @@ void DK_Player::movement()
     Serial.print(playerPositionX);
     Serial.print(F(", Player pos y: "));
     Serial.print(playerPositionY);
-    Serial.print(F(", Player left: "));
-    Serial.print(playerLeft);
-    Serial.print(F(", Player right: "));
+    // Serial.print(F(", Player left: "));
+    // Serial.print(playerLeft);
+    // Serial.print(F(", Player right: "));
+    // Serial.print(playerRight);
+    // Serial.print(F(", is moving: "));
+    // Serial.print(isMoving);
+    Serial.print(F(", is moving x: "));
+    Serial.print(isMovingX);
+    // Serial.print(F(", is moving y: "));
+    // Serial.println(isMovingY);
+    Serial.print(F(", addPlatformYValue: "));
+    Serial.print(addPlatformYValue);
+    Serial.print(F(", player right: "));
     Serial.print(playerRight);
-    Serial.print(F(", is moving: "));
-    Serial.println(isMoving);
+    Serial.print(F(", player left: "));
+    Serial.println(playerLeft);
 
     isMoving = false;
+    isMovingX = false;
+    isMovingY = false;
 
     if (prevPlayerPositionX != playerPositionX || prevPlayerPositionY != playerPositionY)
         isMoving = true;
+
+    if (prevPlayerPositionX != playerPositionX)
+        isMovingX = true;
+
+    if (prevPlayerPositionY != playerPositionY)
+        isMovingY = true;
+
+    playerPlatform.changePlatformY();
 
     // Must be at the bottom.
     prevPlayerPositionX = playerPositionX;
