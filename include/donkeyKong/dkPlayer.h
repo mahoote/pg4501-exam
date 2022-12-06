@@ -13,6 +13,8 @@ public:
     void movement();
 
 private:
+    void moveDirectionX(TFT_eSprite *sprite[], SpriteImage *spriteImage[]);
+    void drawSprite(TFT_eSprite *sprite, SpriteImage *spriteImage);
     void renderSprites();
     void timeInAirDelay();
     void movementHorizontally();

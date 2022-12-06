@@ -2,20 +2,31 @@
 
 int playerPositionX = 0,
     playerPositionY = 0,
+    prevPlayerPositionX = 0,
+    prevPlayerPositionY = 0,
     stickValueX,
-    stickValueY;
+    stickValueY,
+    playerPlatformY = 0,
+    // How mutch the player position Y should increase or decrease.
+    addPlatformYValue = 8;
+
+unsigned int jumpCurrentValue = 0,
+             jumpMaxTime = 8;
+
 short gravity = 5,
-      jumpSpeed = 4,
+      jumpSpeed = 2,
       playerSpeed = 2,
       playerHeight,
       playerWidth;
-bool isGrounded = false,
-     isJumping = false;
-unsigned int jumpCurrentValue = 0,
-             jumpMaxTime = 8;
+
 short lastInputValueX = 1,
       frameCounter = 0,
       changeSpriteAfterFrames = 4;
+
+bool isGrounded = false,
+     isJumping = false,
+     isMoving = false,
+     playerLeft = false, playerRight = false;
 
 TFT_eSprite marioIdleLeftSprite = TFT_eSprite(display.getTft());
 TFT_eSprite marioIdleRightSprite = TFT_eSprite(display.getTft());
@@ -23,6 +34,8 @@ TFT_eSprite marioWalkLeftSprite = TFT_eSprite(display.getTft());
 TFT_eSprite marioWalkRightSprite = TFT_eSprite(display.getTft());
 TFT_eSprite marioJumpLeftSprite = TFT_eSprite(display.getTft());
 TFT_eSprite marioJumpRightSprite = TFT_eSprite(display.getTft());
+
+SpriteImage *currentSpriteImage;
 
 SpriteImage marioIdleRightSpriteImage,
     marioIdleLeftSpriteImage,
@@ -49,17 +62,37 @@ void DK_Player::movement()
     if (lastInputValueX != stickValueX && stickValueX != 0)
         lastInputValueX = stickValueX;
 
+    renderSprites();
+
+    playerPlatformY = SCREEN_HEIGHT - playerHeight - addPlatformYValue;
+
     movementHorizontally();
     movementJump();
     enableGravity();
 
-    renderSprites();
+    Serial.print(F("Player pos x: "));
+    Serial.print(playerPositionX);
+    Serial.print(F(", Player pos y: "));
+    Serial.print(playerPositionY);
+    Serial.print(F(", Player left: "));
+    Serial.print(playerLeft);
+    Serial.print(F(", Player right: "));
+    Serial.print(playerRight);
+    Serial.print(F(", is moving: "));
+    Serial.println(isMoving);
+
+    isMoving = false;
+
+    if (prevPlayerPositionX != playerPositionX || prevPlayerPositionY != playerPositionY)
+        isMoving = true;
+
+    // Must be at the bottom.
+    prevPlayerPositionX = playerPositionX;
+    prevPlayerPositionY = playerPositionY;
 }
 
 void DK_Player::renderSprites()
 {
-    SpriteImage *currentSpriteImage;
-
     frameCounter++;
 
     if (frameCounter > changeSpriteAfterFrames * 2)
@@ -68,58 +101,59 @@ void DK_Player::renderSprites()
     // Right
     if (lastInputValueX > 0)
     {
-        if (!isGrounded || isJumping)
-        {
-            currentSpriteImage = &marioJumpRightSpriteImage;
-            display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioJumpRightSprite, &marioJumpRightSpriteImage);
-        }
-        else
-        {
-            if (frameCounter > changeSpriteAfterFrames &&
-                frameCounter < (changeSpriteAfterFrames * 2) && stickValueX != 0)
-            {
-                currentSpriteImage = &marioJumpRightSpriteImage;
-                display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioWalkRightSprite, &marioWalkRightSpriteImage);
-            }
-            else
-            {
-                currentSpriteImage = &marioIdleRightSpriteImage;
-                display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioIdleRightSprite, &marioIdleRightSpriteImage);
-            }
-        }
+        playerRight = true;
+        playerLeft = false;
+
+        TFT_eSprite *sprites[] = {&marioIdleRightSprite, &marioWalkRightSprite, &marioJumpRightSprite};
+        SpriteImage *spriteImages[] = {&marioJumpRightSpriteImage, &marioWalkRightSpriteImage, &marioIdleRightSpriteImage};
+
+        moveDirectionX(sprites, spriteImages);
     }
     // Left
     else if (lastInputValueX < 0)
     {
-        if (!isGrounded || isJumping)
-        {
-            currentSpriteImage = &marioJumpLeftSpriteImage;
-            display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioJumpLeftSprite, &marioJumpLeftSpriteImage);
-        }
-        else
-        {
-            if (frameCounter > changeSpriteAfterFrames &&
-                frameCounter < (changeSpriteAfterFrames * 2) && stickValueX != 0)
-            {
-                currentSpriteImage = &marioJumpLeftSpriteImage;
-                display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioWalkLeftSprite, &marioWalkLeftSpriteImage);
-            }
-            else
-            {
-                currentSpriteImage = &marioIdleLeftSpriteImage;
-                display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioIdleLeftSprite, &marioIdleLeftSpriteImage);
-            }
-        }
+        playerLeft = true;
+        playerRight = false;
+
+        TFT_eSprite *sprites[] = {&marioIdleLeftSprite, &marioWalkLeftSprite, &marioJumpLeftSprite};
+        SpriteImage *spriteImages[] = {&marioJumpLeftSpriteImage, &marioWalkLeftSpriteImage, &marioIdleLeftSpriteImage};
+
+        moveDirectionX(sprites, spriteImages);
     }
     // Something is wrong
     else
     {
-        currentSpriteImage = &marioIdleRightSpriteImage;
-        display.drawImageToScreen(&playerPositionX, &playerPositionY, &marioIdleRightSprite, &marioIdleRightSpriteImage);
+        drawSprite(&marioIdleRightSprite, &marioIdleRightSpriteImage);
     }
 
     playerWidth = *currentSpriteImage->getWidth();
     playerHeight = *currentSpriteImage->getHeight();
+}
+
+void DK_Player::moveDirectionX(TFT_eSprite *sprites[], SpriteImage *spriteImage[])
+{
+    if (!isGrounded || isJumping)
+    {
+        drawSprite(sprites[2], spriteImage[2]);
+    }
+    else
+    {
+        if (frameCounter > changeSpriteAfterFrames &&
+            frameCounter < (changeSpriteAfterFrames * 2) && stickValueX != 0)
+        {
+            drawSprite(sprites[1], spriteImage[1]);
+        }
+        else
+        {
+            drawSprite(sprites[0], spriteImage[0]);
+        }
+    }
+}
+
+void DK_Player::drawSprite(TFT_eSprite *sprite, SpriteImage *spriteImage)
+{
+    currentSpriteImage = spriteImage;
+    display.drawImageToScreen(&playerPositionX, &playerPositionY, sprite, spriteImage);
 }
 
 void DK_Player::movementHorizontally()
@@ -147,16 +181,6 @@ void DK_Player::movementJump()
     {
         isJumping = true;
     }
-
-    if (!isGrounded)
-    {
-        // Reset ground position.
-        if (playerPositionY >= SCREEN_HEIGHT - playerHeight - 8)
-        {
-            isGrounded = true;
-            playerPositionY = SCREEN_HEIGHT - playerHeight - 8;
-        }
-    }
 }
 
 void DK_Player::enableGravity()
@@ -168,6 +192,16 @@ void DK_Player::enableGravity()
             playerPositionY = playerPositionY + gravity;
         }
     }
+
+    // Reset ground position if too far down.
+    if (playerPositionY >= playerPlatformY)
+    {
+        isGrounded = true;
+        playerPositionY = playerPlatformY;
+    }
+
+    if (prevPlayerPositionY != playerPositionY)
+        isMoving = true;
 }
 
 void DK_Player::timeInAirDelay()
