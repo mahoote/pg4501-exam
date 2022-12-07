@@ -1,7 +1,5 @@
 #include "donkeyKong/dkPlayerPlatform.h"
 
-int updateFrame = 5;
-
 void DK_PlayerPlatform::getPlayerValues(int *_playerPositionX,
                                         int *_playerPositionY,
                                         int *_addPlatformYValue,
@@ -10,7 +8,6 @@ void DK_PlayerPlatform::getPlayerValues(int *_playerPositionX,
                                         bool *_playerLeft,
                                         bool *_playerRight,
                                         bool *_playerUp,
-                                        bool *_playerDown,
                                         bool *_gravityEnabled)
 {
     playerPositionX = _playerPositionX;
@@ -21,68 +18,139 @@ void DK_PlayerPlatform::getPlayerValues(int *_playerPositionX,
     playerLeft = _playerLeft;
     playerRight = _playerRight;
     playerUp = _playerUp;
-    playerDown = _playerDown;
     gravityEnabled = _gravityEnabled;
 }
 
 void DK_PlayerPlatform::changePlatformY()
 {
-    static int frameCounter;
     frameCounter++;
 
-    // First floor
-    // if (*playerPositionY > 240 && *playerPositionY < 150)
-    // {
+    int firstFloorY[2] = {240, 194};
+    int latterX[2] = {100, 120};
+    int firstFloorSlopeStart = 56;
+    int firstPlatformYValue = 8;
 
-    if (gravityEnabled)
+    int secondFloorY[2] = {195, 138};
+    int secondLatterX[2] = {45, 65};
+    int secondFloorSlopeStart = 120;
+    int secondPlatformYValue = 35;
+    int secondFloorLatterTop = 189;
+
+    int thirdPlatformYValue = 70;
+
+    // First floor
+    moveOnPlatform(firstFloorY, latterX, firstFloorSlopeStart, firstPlatformYValue, 5, 1);
+    climbLatter(latterX[0], latterX[1], secondFloorLatterTop, secondPlatformYValue);
+
+    // Second floor
+    moveOnPlatform(secondFloorY, secondLatterX, secondFloorSlopeStart, secondPlatformYValue, 6, 0);
+    // climbLatter(secondLatterX[0], secondLatterX[1], secondFloorY[1], thirdPlatformYValue);
+}
+
+void DK_PlayerPlatform::moveOnPlatform(int floorY[],
+                                       int latterX[],
+                                       int floorSlopeStart,
+                                       int currentPlatformYValue,
+                                       int updateFrame,
+                                       byte slopeRight)
+{
+    static int lastPlayerPosX;
+
+    if (*playerPositionY < floorY[0] && *playerPositionY > floorY[1])
     {
-        if (*isMovingX)
+        Serial.print("Running");
+        Serial.println(currentPlatformYValue);
+
+        if (gravityEnabled)
         {
-            if (*playerPositionX > 56)
+            if (*isMovingX && lastPlayerPosX != *playerPositionX)
             {
-                if (frameCounter == updateFrame)
+                if (slopeRight == 1)
                 {
-                    if (*playerLeft)
+
+                    if (*playerPositionX > floorSlopeStart)
                     {
-                        *addPlatformYValue = *addPlatformYValue - 1;
+                        if (frameCounter == updateFrame)
+                        {
+                            if (*playerLeft)
+                            {
+                                *addPlatformYValue = *addPlatformYValue - 1;
+                            }
+                            else if (*playerRight)
+                            {
+                                *addPlatformYValue = *addPlatformYValue + 1;
+                            }
+                        }
                     }
-                    else if (*playerRight)
+                    else
                     {
-                        *addPlatformYValue = *addPlatformYValue + 1;
+                        *addPlatformYValue = currentPlatformYValue;
+                    }
+                }
+                else if (slopeRight == 0)
+                {
+                    if (*playerPositionX < floorSlopeStart)
+                    {
+                        if (frameCounter == updateFrame)
+                        {
+                            if (*playerLeft)
+                            {
+                                *addPlatformYValue = *addPlatformYValue + 1;
+                            }
+                            else if (*playerRight)
+                            {
+                                *addPlatformYValue = *addPlatformYValue - 1;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        *addPlatformYValue = currentPlatformYValue;
                     }
                 }
             }
-            else
+
+            if (*playerPositionX > latterX[0] && *playerPositionX < latterX[1])
             {
-                *addPlatformYValue = 8;
+                if (*playerUp)
+                {
+                    *gravityEnabled = false;
+                }
             }
         }
 
-        if (*playerUp)
+        if (!*gravityEnabled)
         {
-            if (*playerPositionX > 100 && *playerPositionX < 120)
+            if (*playerUp)
             {
-                *gravityEnabled = false;
+                climbLatterUp = true;
             }
         }
+
+        if (frameCounter >= updateFrame)
+        {
+            frameCounter = 0;
+        }
+
+        lastPlayerPosX = *playerPositionX;
     }
+}
 
-    if (!*gravityEnabled)
+void DK_PlayerPlatform::climbLatter(int latterStart, int latterEnd, int latterTop, int newPlatformYValue)
+{
+    if (climbLatterUp)
     {
-        // *addPlatformYValue = *addPlatformYValue + 1;
-
-        if (*playerUp)
+        if (*playerPositionX > latterStart && *playerPositionX<latterEnd && * playerPositionY> latterTop)
         {
             *addPlatformYValue = *addPlatformYValue + 1;
         }
-        else if (*playerDown)
+        else
         {
-            *addPlatformYValue = *addPlatformYValue - 1;
+            climbLatterUp = false;
+            *gravityEnabled = true;
+            *addPlatformYValue = newPlatformYValue;
         }
     }
-
-    if (frameCounter == updateFrame)
-        frameCounter = 0;
 }
 
 int *DK_PlayerPlatform::getAddPlatformYValue()

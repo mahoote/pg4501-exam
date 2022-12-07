@@ -53,7 +53,7 @@ void DK_Player::init()
 void DK_Player::movement()
 {
     playerPlatform.getPlayerValues(&playerPositionX, &playerPositionY, &addPlatformYValue,
-                                   &isMovingX, &isMovingY, &playerLeft, &playerRight, &playerUp, &playerDown, &gravityEnabled);
+                                   &isMovingX, &isMovingY, &playerLeft, &playerRight, &playerUp, &gravityEnabled);
 
     stickValueX = *joystick.getStickValueX();
     stickValueY = *joystick.getStickValueY();
@@ -78,14 +78,14 @@ void DK_Player::movement()
         enableGravity();
     }
 
-    Serial.print(F("Player pos x: "));
-    Serial.print(playerPositionX);
-    Serial.print(F(", Player pos y: "));
-    Serial.print(playerPositionY);
-    Serial.print(F(", Player up: "));
-    Serial.print(playerUp);
-    Serial.print(F(", Player down: "));
-    Serial.println(playerDown);
+    // Serial.print(F("Player pos x: "));
+    // Serial.print(playerPositionX);
+    // Serial.print(F(", Player pos y: "));
+    // Serial.print(playerPositionY);
+    // Serial.print(F(", Player up: "));
+    // Serial.print(playerUp);
+    // Serial.print(F(", Player down: "));
+    // Serial.println(playerDown);
 
     isMoving = false;
     isMovingX = false;

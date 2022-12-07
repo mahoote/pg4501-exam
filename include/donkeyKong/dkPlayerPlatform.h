@@ -14,13 +14,20 @@ public:
                          bool *_playerLeft,
                          bool *_playerRight,
                          bool *_playerUp,
-                         bool *_playerDown,
                          bool *_gravityEnabled);
     void changePlatformY();
     int *getAddPlatformYValue();
     bool *getGravityEnabled();
 
 private:
+    void moveOnPlatform(int floorY[],
+                        int latterX[],
+                        int floorSlopeStart,
+                        int currentPlatformYValue,
+                        int updateFrame,
+                        byte slopeRight);
+    void climbLatter(int latterStart, int latterEnd, int latterTop, int newPlatformYValue);
+
     int *playerPositionX,
         *playerPositionY,
         *addPlatformYValue;
@@ -32,6 +39,10 @@ private:
         *playerUp,
         *playerDown,
         *gravityEnabled;
+
+    bool climbLatterUp = false;
+    bool climbLatterDown = false;
+    int frameCounter = 0;
 };
 
 #endif
