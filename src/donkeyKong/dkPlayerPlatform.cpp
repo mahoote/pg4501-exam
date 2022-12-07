@@ -26,25 +26,63 @@ void DK_PlayerPlatform::changePlatformY()
     frameCounter++;
 
     int firstFloorY[2] = {240, 194};
-    int latterX[2] = {100, 120};
-    int firstFloorSlopeStart = 56;
+    int latterX[2] = {105, 120};
+    int firstFloorSlopeStartX = 56;
+    int firstFloorLatterTop = -1;
     int firstPlatformYValue = 8;
 
-    int secondFloorY[2] = {195, 138};
-    int secondLatterX[2] = {45, 65};
-    int secondFloorSlopeStart = 120;
-    int secondPlatformYValue = 35;
+    int secondFloorY[2] = {194, 164};
+    int secondLatterX[2] = {50, 65};
+    int secondFloorSlopeStartX = 118;
     int secondFloorLatterTop = 189;
+    int secondPlatformYValue = 35;
 
-    int thirdPlatformYValue = 70;
+    int thirdFloorY[2] = {164, 134};
+    int thirdLatterX[2] = {105, 120};
+    int thirdFloorSlopeStartX = 18;
+    int thirdFloorLatterTop = 154;
+    int thirdPlatformYValue = 65;
+
+    int fourthFloorY[2] = {134, 99};
+    int fourthLatterX[2] = {10, 25};
+    int fourthFloorSlopeStartX = 118;
+    int fourthFloorLatterTop = 127;
+    int fourthPlatformYValue = 96;
+
+    int fifthFloorY[2] = {100, 71};
+    int fifthLatterX[2] = {105, 120};
+    int fifthFloorSlopeStartX = 18;
+    int fifthFloorLatterTop = 96;
+    int fifthPlatformYValue = 127;
+
+    int sixthFloorY[2] = {71, 0};
+    int sixthLatterX[2] = {-1, -1};
+    int sixthFloorSlopeStartX = 88;
+    int sixthFloorLatterTop = 62;
+    int sixthPlatformYValue = 162;
 
     // First floor
-    moveOnPlatform(firstFloorY, latterX, firstFloorSlopeStart, firstPlatformYValue, 5, 1);
-    climbLatter(latterX[0], latterX[1], secondFloorLatterTop, secondPlatformYValue);
+    moveOnPlatform(firstFloorY, latterX, firstFloorSlopeStartX, firstPlatformYValue, 5, 1, 1);
+    climbLatter(latterX[0], latterX[1], secondFloorLatterTop, secondPlatformYValue, 0);
 
     // Second floor
-    moveOnPlatform(secondFloorY, secondLatterX, secondFloorSlopeStart, secondPlatformYValue, 6, 0);
-    // climbLatter(secondLatterX[0], secondLatterX[1], secondFloorY[1], thirdPlatformYValue);
+    moveOnPlatform(secondFloorY, secondLatterX, secondFloorSlopeStartX, secondPlatformYValue, 6, 1, 0);
+    climbLatter(secondLatterX[0], secondLatterX[1], thirdFloorLatterTop, thirdPlatformYValue, 1);
+
+    // Third floor
+    moveOnPlatform(thirdFloorY, thirdLatterX, thirdFloorSlopeStartX, thirdPlatformYValue, 5, 1, 1);
+    climbLatter(thirdLatterX[0], thirdLatterX[1], fourthFloorLatterTop, fourthPlatformYValue, 2);
+
+    // Fourth floor
+    moveOnPlatform(fourthFloorY, fourthLatterX, fourthFloorSlopeStartX, fourthPlatformYValue, 5, 1, 0);
+    climbLatter(fourthLatterX[0], fourthLatterX[1], fifthFloorLatterTop, fifthPlatformYValue, 3);
+
+    // Fifth floor
+    moveOnPlatform(fifthFloorY, fifthLatterX, fifthFloorSlopeStartX, fifthPlatformYValue, 5, 1, 1);
+    climbLatter(fifthLatterX[0], fifthLatterX[1], sixthFloorLatterTop, sixthPlatformYValue, 4);
+
+    // Sixth floor
+    moveOnPlatform(sixthFloorY, sixthLatterX, sixthFloorSlopeStartX, sixthPlatformYValue, 5, -1, 1);
 }
 
 void DK_PlayerPlatform::moveOnPlatform(int floorY[],
@@ -52,33 +90,30 @@ void DK_PlayerPlatform::moveOnPlatform(int floorY[],
                                        int floorSlopeStart,
                                        int currentPlatformYValue,
                                        int updateFrame,
+                                       int slopeValue,
                                        byte slopeRight)
 {
     static int lastPlayerPosX;
 
     if (*playerPositionY < floorY[0] && *playerPositionY > floorY[1])
     {
-        Serial.print("Running");
-        Serial.println(currentPlatformYValue);
-
         if (gravityEnabled)
         {
             if (*isMovingX && lastPlayerPosX != *playerPositionX)
             {
                 if (slopeRight == 1)
                 {
-
                     if (*playerPositionX > floorSlopeStart)
                     {
                         if (frameCounter == updateFrame)
                         {
                             if (*playerLeft)
                             {
-                                *addPlatformYValue = *addPlatformYValue - 1;
+                                *addPlatformYValue = *addPlatformYValue - slopeValue;
                             }
                             else if (*playerRight)
                             {
-                                *addPlatformYValue = *addPlatformYValue + 1;
+                                *addPlatformYValue = *addPlatformYValue + slopeValue;
                             }
                         }
                     }
@@ -95,11 +130,11 @@ void DK_PlayerPlatform::moveOnPlatform(int floorY[],
                         {
                             if (*playerLeft)
                             {
-                                *addPlatformYValue = *addPlatformYValue + 1;
+                                *addPlatformYValue = *addPlatformYValue + slopeValue;
                             }
                             else if (*playerRight)
                             {
-                                *addPlatformYValue = *addPlatformYValue - 1;
+                                *addPlatformYValue = *addPlatformYValue - slopeValue;
                             }
                         }
                     }
@@ -136,9 +171,9 @@ void DK_PlayerPlatform::moveOnPlatform(int floorY[],
     }
 }
 
-void DK_PlayerPlatform::climbLatter(int latterStart, int latterEnd, int latterTop, int newPlatformYValue)
+void DK_PlayerPlatform::climbLatter(int latterStart, int latterEnd, int latterTop, int newPlatformYValue, short floorLevel)
 {
-    if (climbLatterUp)
+    if (climbLatterUp && playerCurrentFloor == floorLevel)
     {
         if (*playerPositionX > latterStart && *playerPositionX<latterEnd && * playerPositionY> latterTop)
         {
@@ -148,7 +183,7 @@ void DK_PlayerPlatform::climbLatter(int latterStart, int latterEnd, int latterTo
         {
             climbLatterUp = false;
             *gravityEnabled = true;
-            *addPlatformYValue = newPlatformYValue;
+            playerCurrentFloor++;
         }
     }
 }

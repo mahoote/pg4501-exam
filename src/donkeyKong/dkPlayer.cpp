@@ -61,31 +61,30 @@ void DK_Player::movement()
     if (lastInputValueX != stickValueX && stickValueX != 0)
         lastInputValueX = stickValueX;
 
-    renderSprites();
+    movementVertically();
 
     playerPlatform.changePlatformY();
 
     addPlatformYValue = *playerPlatform.getAddPlatformYValue();
     playerPlatformY = SCREEN_HEIGHT - playerHeight - addPlatformYValue;
 
-    movementVertically();
-
     gravityEnabled = *playerPlatform.getGravityEnabled();
+
     if (gravityEnabled)
     {
         movementHorizontally();
-        // movementJump();
+        movementJump();
         enableGravity();
     }
 
-    // Serial.print(F("Player pos x: "));
-    // Serial.print(playerPositionX);
-    // Serial.print(F(", Player pos y: "));
-    // Serial.print(playerPositionY);
-    // Serial.print(F(", Player up: "));
-    // Serial.print(playerUp);
-    // Serial.print(F(", Player down: "));
-    // Serial.println(playerDown);
+    Serial.print(F("Player pos x: "));
+    Serial.print(playerPositionX);
+    Serial.print(F(", Player pos y: "));
+    Serial.print(playerPositionY);
+    Serial.print(F(", Player up: "));
+    Serial.print(playerUp);
+    Serial.print(F(", Player down: "));
+    Serial.println(playerDown);
 
     isMoving = false;
     isMovingX = false;
@@ -103,6 +102,8 @@ void DK_Player::movement()
     // Must be at the bottom.
     prevPlayerPositionX = playerPositionX;
     prevPlayerPositionY = playerPositionY;
+
+    renderSprites();
 }
 
 void DK_Player::renderSprites()
@@ -211,14 +212,14 @@ void DK_Player::movementVertically()
 
 void DK_Player::movementJump()
 {
-    if (isJumping)
-    {
-        timeInAirDelay();
-    }
-
     if (stickValueY < 0 && isGrounded && !isJumping)
     {
         isJumping = true;
+    }
+
+    if (isJumping)
+    {
+        timeInAirDelay();
     }
 }
 

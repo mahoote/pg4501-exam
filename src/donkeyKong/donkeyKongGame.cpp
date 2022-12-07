@@ -9,7 +9,7 @@ void DonkeyKongGame::init()
     memory.initSD();
     player.init();
 
-    memory.initSprite("/Donkey_Kong_Game/Donkey_Kong_Background", screenSprite, &donkeyKongBackgroundImage);
+    memory.initSprite("/Donkey_Kong_Game/Donkey_Kong_Background_2", screenSprite, &donkeyKongBackgroundImage);
     screenSprite->setSwapBytes(true);
 }
 

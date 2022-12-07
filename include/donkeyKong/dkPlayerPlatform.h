@@ -25,8 +25,9 @@ private:
                         int floorSlopeStart,
                         int currentPlatformYValue,
                         int updateFrame,
+                        int slopeValue,
                         byte slopeRight);
-    void climbLatter(int latterStart, int latterEnd, int latterTop, int newPlatformYValue);
+    void climbLatter(int latterStart, int latterEnd, int latterTop, int newPlatformYValue, short floorLevel);
 
     int *playerPositionX,
         *playerPositionY,
@@ -43,6 +44,7 @@ private:
     bool climbLatterUp = false;
     bool climbLatterDown = false;
     int frameCounter = 0;
+    int playerCurrentFloor = 0;
 };
 
 #endif
