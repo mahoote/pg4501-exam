@@ -13,8 +13,8 @@ void DonkeyKongGame::init()
     TFT_eSprite *screenSprite = display.getScreenSprite();
 
     memory.initSD();
-    player.init();
     boss.init();
+    player.init();
 
     memory.initSprite("/Donkey_Kong_Game/Donkey_Kong_Background_2", screenSprite, &donkeyKongBackgroundImage);
     screenSprite->setSwapBytes(true);

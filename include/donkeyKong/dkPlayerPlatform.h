@@ -14,10 +14,14 @@ public:
                          bool *_playerLeft,
                          bool *_playerRight,
                          bool *_playerUp,
-                         bool *_gravityEnabled);
+                         bool *_gravityEnabled,
+                         bool *_isGrounded,
+                         bool *_isJumping);
     void changePlatformY();
     int *getAddPlatformYValue();
     bool *getGravityEnabled();
+    bool *getIsGrounded();
+    bool *getIsJumping();
 
 private:
     void moveOnPlatform(int floorY[],
@@ -39,7 +43,9 @@ private:
         *playerRight,
         *playerUp,
         *playerDown,
-        *gravityEnabled;
+        *gravityEnabled,
+        *isGrounded,
+        *isJumping;
 
     bool climbLatterUp = false;
     bool climbLatterDown = false;

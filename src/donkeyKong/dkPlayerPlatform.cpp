@@ -14,7 +14,9 @@ void DK_PlayerPlatform::getPlayerValues(int *_playerPositionX,
                                         bool *_playerLeft,
                                         bool *_playerRight,
                                         bool *_playerUp,
-                                        bool *_gravityEnabled)
+                                        bool *_gravityEnabled,
+                                        bool *_isGrounded,
+                                        bool *_isJumping)
 {
     playerPositionX = _playerPositionX;
     playerPositionY = _playerPositionY;
@@ -25,6 +27,8 @@ void DK_PlayerPlatform::getPlayerValues(int *_playerPositionX,
     playerRight = _playerRight;
     playerUp = _playerUp;
     gravityEnabled = _gravityEnabled;
+    isJumping = _isJumping;
+    isGrounded = _isGrounded;
 }
 
 void DK_PlayerPlatform::changePlatformY()
@@ -32,31 +36,31 @@ void DK_PlayerPlatform::changePlatformY()
     frameCounter++;
 
     int firstFloorY[2] = {240, 194};
-    int latterX[2] = {105, 120};
+    int latterX[2] = {105, 115};
     int firstFloorSlopeStartX = 56;
     int firstFloorLatterTop = -1;
     int firstPlatformYValue = 8;
 
     int secondFloorY[2] = {194, 164};
-    int secondLatterX[2] = {50, 65};
+    int secondLatterX[2] = {50, 60};
     int secondFloorSlopeStartX = 118;
     int secondFloorLatterTop = 189;
     int secondPlatformYValue = 35;
 
     int thirdFloorY[2] = {164, 134};
-    int thirdLatterX[2] = {105, 120};
+    int thirdLatterX[2] = {105, 115};
     int thirdFloorSlopeStartX = 18;
     int thirdFloorLatterTop = 154;
     int thirdPlatformYValue = 65;
 
     int fourthFloorY[2] = {134, 99};
-    int fourthLatterX[2] = {10, 25};
+    int fourthLatterX[2] = {10, 20};
     int fourthFloorSlopeStartX = 118;
     int fourthFloorLatterTop = 127;
     int fourthPlatformYValue = 96;
 
     int fifthFloorY[2] = {100, 71};
-    int fifthLatterX[2] = {105, 120};
+    int fifthLatterX[2] = {105, 115};
     int fifthFloorSlopeStartX = 18;
     int fifthFloorLatterTop = 96;
     int fifthPlatformYValue = 127;
@@ -156,6 +160,8 @@ void DK_PlayerPlatform::moveOnPlatform(int floorY[],
                 if (*playerUp)
                 {
                     *gravityEnabled = false;
+                    *isJumping = false;
+                    *isGrounded = true;
                 }
             }
         }
@@ -202,4 +208,14 @@ int *DK_PlayerPlatform::getAddPlatformYValue()
 bool *DK_PlayerPlatform::getGravityEnabled()
 {
     return gravityEnabled;
+}
+
+bool *DK_PlayerPlatform::getIsGrounded()
+{
+    return isGrounded;
+}
+
+bool *DK_PlayerPlatform::getIsJumping()
+{
+    return isJumping;
 }

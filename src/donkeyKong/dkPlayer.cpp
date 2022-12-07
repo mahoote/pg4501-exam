@@ -53,7 +53,8 @@ void DK_Player::init()
 void DK_Player::movement()
 {
     playerPlatform.getPlayerValues(&playerPositionX, &playerPositionY, &addPlatformYValue,
-                                   &isMovingX, &isMovingY, &playerLeft, &playerRight, &playerUp, &gravityEnabled);
+                                   &isMovingX, &isMovingY, &playerLeft, &playerRight, &playerUp,
+                                   &gravityEnabled, &isGrounded, &isJumping);
 
     stickValueX = *joystick.getStickValueX();
     stickValueY = *joystick.getStickValueY();
@@ -69,6 +70,8 @@ void DK_Player::movement()
     playerPlatformY = SCREEN_HEIGHT - playerHeight - addPlatformYValue;
 
     gravityEnabled = *playerPlatform.getGravityEnabled();
+    isGrounded = *playerPlatform.getIsGrounded();
+    isJumping = *playerPlatform.getIsJumping();
 
     if (gravityEnabled)
     {
