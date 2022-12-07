@@ -1,3 +1,9 @@
+/* ==================================================
+    This class is used to make the player "interact" with the platforms
+    and latters. There is no collision detection, but code that makes it seem
+    like he is walking on the platforms.
+   ================================================== */
+
 #include "donkeyKong/dkPlayerPlatform.h"
 
 void DK_PlayerPlatform::getPlayerValues(int *_playerPositionX,
