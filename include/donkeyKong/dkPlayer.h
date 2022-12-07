@@ -1,6 +1,4 @@
 #include <Arduino.h>
-#include "io/joystick.h"
-#include "io/memory.h"
 #include "main.h"
 #include "donkeyKong/dkPlayerPlatform.h"
 

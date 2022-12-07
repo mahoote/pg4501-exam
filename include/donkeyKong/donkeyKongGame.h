@@ -3,6 +3,8 @@
 
 #include "main.h"
 #include "donkeyKong/dkPlayer.h"
+#include "donkeyKong/dkBarrel.h"
+#include "donkeyKong/dkBoss.h"
 
 #ifndef __DONKEY_KONG_GAME_H__
 #define __DONKEY_KONG_GAME_H__
@@ -15,6 +17,7 @@ public:
 
 private:
     DK_Player player;
+    DK_Boss boss;
     SpriteImage donkeyKongBackgroundImage;
 };
 
