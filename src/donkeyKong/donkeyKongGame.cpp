@@ -32,6 +32,9 @@ void DonkeyKongGame::play()
         {
             startGame = true;
         }
+
+        score.resetBonus();
+        score.resetCurrentScore();
     }
     // In game
     else
@@ -48,8 +51,10 @@ void DonkeyKongGame::play()
         else if (*player.getPositionY() <= 36 && *player.getPositionX() > 60 && *player.getPositionX() < 90)
         {
             resetGame();
-            barrelAmount = barrelAmount + 2;
             levelCounter++;
+            score.addCurrentScore(*score.getBonus());
+            prevScore = *score.getCurrentScore();
+            barrelAmount = barrelAmount + 2;
         }
         // Gameplay
         else
@@ -64,7 +69,12 @@ void DonkeyKongGame::play()
                 barrels[i]->dropBarrel(&player, &playerHit);
             }
 
+            score.dropBonus();
+            String bonusString = text.leadingZerosString(4, *score.getBonus());
+            text.writeText(bonusString, 106, 45, TFT_WHITE);
+
             printPoints("100");
+            score.updateHighScore();
         }
     }
 
@@ -111,6 +121,7 @@ void DonkeyKongGame::resetGame()
     delete[] barrels;
 
     initBarrels = true;
+    score.resetBonus();
 }
 
 void DonkeyKongGame::printPoints(String value)
@@ -153,7 +164,9 @@ void DonkeyKongGame::printPoints(String value)
 void DonkeyKongGame::printDefaultUI()
 {
     text.writeText("HIGH SCORE", 40, 0, TFT_RED);
-    text.writeText("000000", 53, 10, TFT_WHITE);
+
+    String highScoreString = text.leadingZerosString(6, *score.getHighScore());
+    text.writeText(highScoreString, 53, 10, TFT_WHITE);
 
     text.writeText("1UP", 14, 0, TFT_RED);
 
