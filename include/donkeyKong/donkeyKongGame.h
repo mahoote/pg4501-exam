@@ -8,6 +8,7 @@
 #include "donkeyKong/dkBoss.h"
 #include "donkeyKong/score/dkScoreBoard.h"
 #include "donkeyKong/score/dkScoreFile.h"
+#include "array/sorter.h"
 
 #ifndef __DONKEY_KONG_GAME_H__
 #define __DONKEY_KONG_GAME_H__
@@ -29,8 +30,9 @@ private:
 
     int barrelAmount = 5;
 
+    Sorter sorter;
     DK_ScoreFile scoreFile;
-        DK_Player player;
+    DK_Player player;
     DK_Boss boss;
     DK_Barrel **barrels;
     SpriteImage donkeyKongBackgroundImage;

@@ -22,6 +22,8 @@ void DonkeyKongGame::init()
     Serial.print("Scores size: ");
     Serial.println(scoreSize);
 
+    sorter.bubbleSort(scores, scoreSize);
+
     for (int i = 0; i < scoreSize; i++)
     {
         Serial.println(scores[i]);
