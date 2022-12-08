@@ -19,6 +19,7 @@ public:
     void resetGame();
 
 private:
+    void printPoints(String value, unsigned int *prevScore, byte *prevScoreSet);
     void printDefaultUI();
     void printHighScores();
     void printPressToPlay();

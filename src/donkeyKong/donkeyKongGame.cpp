@@ -28,10 +28,7 @@ void DonkeyKongGame::play()
 {
     static byte playerHit;
     static unsigned int prevScore;
-    static bool printPoints;
-    static int playerPosX;
-    static int playerPosY;
-    static int showPointsFrameCounter;
+    static byte prevScoreSet = 0;
 
     TFT_eSprite *screenSprite = display.getScreenSprite();
     joystick.setJoystickValues();
@@ -64,35 +61,12 @@ void DonkeyKongGame::play()
                 barrels[i].dropBarrel(&player, &playerHit);
             }
 
-            unsigned int currentScore = *score.getCurrentScore();
-            if (prevScore == 0)
-                prevScore = currentScore;
-
-            if (currentScore != prevScore)
-            {
-                printPoints = true;
-                showPointsFrameCounter = 0;
-                playerPosX = *player.getPositionX();
-                playerPosY = *player.getPositionY();
-            }
-
-            if (printPoints && showPointsFrameCounter < 60)
-            {
-                showPointsFrameCounter++;
-                text.writeText("100", playerPosX, playerPosY, TFT_WHITE);
-            }
-            else
-            {
-                printPoints = false;
-            }
-
-            prevScore = currentScore;
+            printPoints("100", &prevScore, &prevScoreSet);
         }
         else
         {
             prevScore = 0;
-            printPoints = false;
-            showPointsFrameCounter = 0;
+            prevScoreSet = 0;
             playerHit = 0;
             startGame = false;
             resetGame();
@@ -111,6 +85,43 @@ void DonkeyKongGame::resetGame()
     {
         barrels[i].reset();
     }
+}
+
+void DonkeyKongGame::printPoints(String value, unsigned int *prevScore, byte *prevScoreSet)
+{
+    static bool printPoints;
+    static int playerPosX;
+    static int playerPosY;
+    static int showPointsFrameCounter;
+
+    unsigned int currentScore = *score.getCurrentScore();
+
+    if (*prevScore == 0 && *prevScoreSet == 0)
+    {
+        *prevScoreSet = 1;
+        *prevScore = currentScore;
+    }
+
+    if (*prevScore != currentScore)
+    {
+        printPoints = true;
+        showPointsFrameCounter = 0;
+        playerPosX = *player.getPositionX();
+        playerPosY = *player.getPositionY();
+    }
+
+    if (printPoints && showPointsFrameCounter < 60)
+    {
+        showPointsFrameCounter++;
+        text.writeText(value, playerPosX, playerPosY, TFT_WHITE);
+    }
+    else
+    {
+        printPoints = false;
+        showPointsFrameCounter = 60;
+    }
+
+    *prevScore = currentScore;
 }
 
 void DonkeyKongGame::printDefaultUI()
