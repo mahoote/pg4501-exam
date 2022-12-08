@@ -73,10 +73,13 @@ void DK_PlayerPlatform::changePlatformY()
     int fifthPlatformYValue = 127;
 
     int sixthFloorY[2] = {71, 0};
-    int sixthLatterX[2] = {-1, -1};
+    int sixthLatterX[2] = {70, 80};
     int sixthFloorSlopeStartX = 88;
     int sixthFloorLatterTop = 62;
     int sixthPlatformYValue = 162;
+
+    int seventhFloorLatterTop = 36;
+    int seventhPlatformYValue = 188;
 
     // First floor
     moveOnPlatform(firstFloorY, latterX, firstFloorSlopeStartX, firstPlatformYValue, 5, 1, 1);
@@ -100,6 +103,7 @@ void DK_PlayerPlatform::changePlatformY()
 
     // Sixth floor
     moveOnPlatform(sixthFloorY, sixthLatterX, sixthFloorSlopeStartX, sixthPlatformYValue, 5, -1, 1);
+    climbLatter(sixthLatterX[0], sixthLatterX[1], seventhFloorLatterTop, seventhPlatformYValue, 5);
 }
 
 void DK_PlayerPlatform::moveOnPlatform(int floorY[],

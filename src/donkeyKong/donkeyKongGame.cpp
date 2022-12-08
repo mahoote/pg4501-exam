@@ -27,6 +27,11 @@ void DonkeyKongGame::init()
 void DonkeyKongGame::play()
 {
     static byte playerHit;
+    static unsigned int prevScore;
+    static bool printPoints;
+    static int playerPosX;
+    static int playerPosY;
+    static int showPointsFrameCounter;
 
     TFT_eSprite *screenSprite = display.getScreenSprite();
     joystick.setJoystickValues();
@@ -58,9 +63,36 @@ void DonkeyKongGame::play()
             {
                 barrels[i].dropBarrel(&player, &playerHit);
             }
+
+            unsigned int currentScore = *score.getCurrentScore();
+            if (prevScore == 0)
+                prevScore = currentScore;
+
+            if (currentScore != prevScore)
+            {
+                printPoints = true;
+                showPointsFrameCounter = 0;
+                playerPosX = *player.getPositionX();
+                playerPosY = *player.getPositionY();
+            }
+
+            if (printPoints && showPointsFrameCounter < 60)
+            {
+                showPointsFrameCounter++;
+                text.writeText("100", playerPosX, playerPosY, TFT_WHITE);
+            }
+            else
+            {
+                printPoints = false;
+            }
+
+            prevScore = currentScore;
         }
         else
         {
+            prevScore = 0;
+            printPoints = false;
+            showPointsFrameCounter = 0;
             playerHit = 0;
             startGame = false;
             resetGame();
