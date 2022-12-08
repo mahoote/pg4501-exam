@@ -2,11 +2,11 @@
 
 #include "donkeyKong/donkeyKongGame.h"
 
+bool initBarrels = true;
+
 void DonkeyKongGame::init()
 {
     TFT_eSprite *screenSprite = display.getScreenSprite();
-
-    // barrels = (DK_Barrel *)malloc(sizeof(DK_Barrel) * barrelAmount);
 
     memory.initSD();
     memory.initSprite("/Donkey_Kong_Game/Donkey_Kong_Background_2", screenSprite, &donkeyKongBackgroundImage);
@@ -14,10 +14,6 @@ void DonkeyKongGame::init()
 
     player.init();
     boss.init();
-    for (int i = 0; i < barrelAmount; i++)
-    {
-        barrels[i].init();
-    }
 }
 
 void DonkeyKongGame::play()
@@ -40,17 +36,22 @@ void DonkeyKongGame::play()
     // In game
     else
     {
+        if (levelCounter <= 0)
+            levelCounter = 1;
+
+        createBarrels();
+
         if (playerHit != 0)
         {
             gameOver();
         }
         else if (*player.getPositionY() <= 36 && *player.getPositionX() > 60 && *player.getPositionX() < 90)
         {
-            // barrelAmount = 20;
             resetGame();
+            barrelAmount = barrelAmount + 2;
+            levelCounter++;
         }
         // Gameplay
-
         else
         {
             screenSprite->pushImage(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, *donkeyKongBackgroundImage.getBuffer());
@@ -60,7 +61,7 @@ void DonkeyKongGame::play()
 
             for (int i = 0; i < barrelAmount; i++)
             {
-                barrels[i].dropBarrel(&player, &playerHit);
+                barrels[i]->dropBarrel(&player, &playerHit);
             }
 
             printPoints("100");
@@ -72,12 +73,30 @@ void DonkeyKongGame::play()
     screenSprite->pushSprite(0, 0);
 }
 
+void DonkeyKongGame::createBarrels()
+{
+    // Create all the instances of the barrel based on the amount.
+    // This will increase per round.
+    if (initBarrels)
+    {
+        initBarrels = false;
+        barrels = new DK_Barrel *[barrelAmount];
+        for (int i = 0; i < barrelAmount; i++)
+        {
+            barrels[i] = new DK_Barrel();
+            barrels[i]->init();
+        }
+    }
+}
+
 void DonkeyKongGame::gameOver()
 {
     startGame = false;
     prevScore = 0;
     prevScoreSet = 0;
     playerHit = 0;
+    barrelAmount = 5;
+    levelCounter = 0;
     resetGame();
 }
 
@@ -86,8 +105,12 @@ void DonkeyKongGame::resetGame()
     player.reset();
     for (int i = 0; i < barrelAmount; i++)
     {
-        barrels[i].reset();
+        barrels[i]->reset();
+        delete barrels[i];
     }
+    delete[] barrels;
+
+    initBarrels = true;
 }
 
 void DonkeyKongGame::printPoints(String value)
@@ -135,23 +158,15 @@ void DonkeyKongGame::printDefaultUI()
     text.writeText("1UP", 14, 0, TFT_RED);
 
     int currentScore = *score.getCurrentScore();
-    int scoreDigitCount = score.count_digit(currentScore);
-    String scoreString = "";
 
-    if (scoreDigitCount < 6)
-    {
-        int remainds = 6 - scoreDigitCount;
-        for (int i = 0; i < remainds; i++)
-        {
-            scoreString += "0";
-        }
-    }
-    if (currentScore != 0)
-        scoreString += String(currentScore);
+    String scoreString = text.leadingZerosString(6, currentScore);
 
     text.writeText(scoreString, 3, 10, TFT_WHITE);
 
-    text.writeText("L=00", 104, 22, TFT_BLUE);
+    String levelString = text.leadingZerosString(2, levelCounter);
+    String printLevelString = "L=" + levelString;
+
+    text.writeText(printLevelString, 104, 22, TFT_BLUE);
 }
 
 void DonkeyKongGame::printHighScores()

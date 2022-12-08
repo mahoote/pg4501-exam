@@ -10,6 +10,8 @@ class TFT_Text
 {
 public:
     void writeText(String text, int x, int y, uint16_t color, int textSize = 1);
+    int countDigits(int number);
+    String leadingZerosString(int digitAmount, int number);
 };
 
 #endif

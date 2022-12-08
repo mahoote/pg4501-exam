@@ -9,7 +9,6 @@ public:
     unsigned int *getCurrentScore();
     void setCurrentScore(unsigned int _score);
     unsigned int *addCurrentScore(unsigned int _points);
-    int count_digit(int number);
 
 private:
     unsigned int highScore = 0;

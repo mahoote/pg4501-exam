@@ -18,6 +18,7 @@ public:
     void play();
 
 private:
+    void createBarrels();
     void resetGame();
     void gameOver();
     void printPoints(String value);
@@ -25,17 +26,19 @@ private:
     void printHighScores();
     void printPressToPlay();
 
+    int barrelAmount = 5;
+
     DK_Player player;
     DK_Boss boss;
-    DK_Barrel barrels[5];
+    DK_Barrel **barrels;
     SpriteImage donkeyKongBackgroundImage;
     TFT_Text text;
 
-    int barrelAmount = 5;
     bool startGame = false;
     byte playerHit;
     unsigned int prevScore;
     byte prevScoreSet = 0;
+    short levelCounter;
 };
 
 #endif
