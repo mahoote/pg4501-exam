@@ -105,5 +105,9 @@ File32 Memory::readFile(String filePath)
 
 File32 Memory::writeFile(String filePath)
 {
-    return sd.open(filePath, O_WRITE);
+    return sd.open(filePath, O_RDWR | O_CREAT | O_AT_END);
+}
+bool Memory::fileExists(String filePath)
+{
+    return sd.exists(filePath);
 }

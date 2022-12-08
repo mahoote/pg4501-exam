@@ -11,7 +11,12 @@ void DK_Score::setCurrentScore(unsigned int _score)
 
 unsigned int *DK_Score::addCurrentScore(unsigned int _points)
 {
-    setCurrentScore(*getCurrentScore() += _points);
+    unsigned newScore = *getCurrentScore() += _points;
+
+    if (newScore > 999999)
+        newScore = 999999;
+
+    setCurrentScore(newScore);
     return getCurrentScore();
 }
 

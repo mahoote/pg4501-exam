@@ -16,6 +16,7 @@ public:
     void setSdSpriteGamePath(String path);
     File32 readFile(String filePath);
     File32 writeFile(String filePath);
+    bool fileExists(String filePath);
 
 private:
     void loadBitmapImage(String *localGamePath, SpriteImage *spriteImage);

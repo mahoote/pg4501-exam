@@ -1,12 +1,64 @@
 #include "donkeyKong/score/dkScoreFile.h"
 
+String filePath = "/Donkey_Kong_Game/";
+String filename = "Donkey_Kong_Scores.txt";
+
+String DK_ScoreFile::getFilePath()
+{
+    return *memory.getSdSpriteGamePath() + filePath + filename;
+}
+
+void DK_ScoreFile::initFile()
+{
+    bool fileExists = memory.fileExists(getFilePath());
+
+    Serial.print("File exists: ");
+    Serial.println(fileExists);
+
+    if (fileExists)
+    {
+        int *scores;
+        int scoreAmount;
+
+        getScoresFromFile(&scores, &scoreAmount);
+
+        if (scoreAmount < 5)
+        {
+            int n = 5 - scoreAmount;
+            for (int i = 0; i < n; i++)
+            {
+                saveScoreToFile(0);
+            }
+        }
+    }
+    else
+    {
+        File32 newFile = memory.writeFile(getFilePath());
+        if (newFile)
+        {
+            Serial.println(F("Created new score saves file!"));
+
+            newFile.println(0);
+            newFile.println(0);
+            newFile.println(0);
+            newFile.println(0);
+            newFile.print(0);
+
+            newFile.close();
+        }
+        else
+        {
+            Serial.println(F("Error opening new file!"));
+        }
+    }
+}
+
 void DK_ScoreFile::saveScoreToFile(int _score)
 {
-    File32 scoreFile = memory.writeFile("/pg4501_exam/Donkey_Kong_Game/Donkey_Kong_Scores.txt");
+    File32 scoreFile = memory.writeFile(getFilePath());
 
     if (scoreFile)
     {
-        scoreFile.seekSet(scoreFile.fileSize());
         scoreFile.print("\n");
         scoreFile.print(_score);
         scoreFile.close();
@@ -19,7 +71,7 @@ void DK_ScoreFile::saveScoreToFile(int _score)
 
 void DK_ScoreFile::getScoresFromFile(int **scores, int *size)
 {
-    File32 scoreFile = memory.readFile("/pg4501_exam/Donkey_Kong_Game/Donkey_Kong_Scores.txt");
+    File32 scoreFile = memory.readFile(getFilePath());
 
     if (scoreFile)
     {
