@@ -34,7 +34,7 @@ private:
                         int updateFrame,
                         int slopeValue,
                         byte slopeRight);
-    void climbLatter(int latterStart, int latterEnd, int latterTop, int newPlatformYValue, short floorLevel);
+    void climbLatter(int latterStart, int latterEnd, int latterTop, short floorLevel);
 
     int *playerPositionX,
         *playerPositionY,

@@ -2,15 +2,11 @@
 
 #include "donkeyKong/donkeyKongGame.h"
 
-int barrelAmount = 5;
-
-DK_Barrel barrels[5];
-// DK_Barrel barrel;
-// DK_Barrel barrelTwo;
-
 void DonkeyKongGame::init()
 {
     TFT_eSprite *screenSprite = display.getScreenSprite();
+
+    // barrels = (DK_Barrel *)malloc(sizeof(DK_Barrel) * barrelAmount);
 
     memory.initSD();
     memory.initSprite("/Donkey_Kong_Game/Donkey_Kong_Background_2", screenSprite, &donkeyKongBackgroundImage);
@@ -26,17 +22,11 @@ void DonkeyKongGame::init()
 
 void DonkeyKongGame::play()
 {
-    static byte playerHit;
-    static unsigned int prevScore;
-    static byte prevScoreSet = 0;
-
     TFT_eSprite *screenSprite = display.getScreenSprite();
     joystick.setJoystickValues();
-
     screenSprite->fillSprite(TFT_BLACK);
 
-    // screenSprite->pushImage(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, *donkeyKongBackgroundImage.getBuffer());
-
+    // Menu
     if (!startGame)
     {
         printPressToPlay();
@@ -47,9 +37,21 @@ void DonkeyKongGame::play()
             startGame = true;
         }
     }
+    // In game
     else
     {
-        if (playerHit == 0)
+        if (playerHit != 0)
+        {
+            gameOver();
+        }
+        else if (*player.getPositionY() <= 36 && *player.getPositionX() > 60 && *player.getPositionX() < 90)
+        {
+            // barrelAmount = 20;
+            resetGame();
+        }
+        // Gameplay
+
+        else
         {
             screenSprite->pushImage(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, *donkeyKongBackgroundImage.getBuffer());
 
@@ -61,21 +63,22 @@ void DonkeyKongGame::play()
                 barrels[i].dropBarrel(&player, &playerHit);
             }
 
-            printPoints("100", &prevScore, &prevScoreSet);
-        }
-        else
-        {
-            prevScore = 0;
-            prevScoreSet = 0;
-            playerHit = 0;
-            startGame = false;
-            resetGame();
+            printPoints("100");
         }
     }
 
     printDefaultUI();
 
     screenSprite->pushSprite(0, 0);
+}
+
+void DonkeyKongGame::gameOver()
+{
+    startGame = false;
+    prevScore = 0;
+    prevScoreSet = 0;
+    playerHit = 0;
+    resetGame();
 }
 
 void DonkeyKongGame::resetGame()
@@ -87,7 +90,7 @@ void DonkeyKongGame::resetGame()
     }
 }
 
-void DonkeyKongGame::printPoints(String value, unsigned int *prevScore, byte *prevScoreSet)
+void DonkeyKongGame::printPoints(String value)
 {
     static bool printPoints;
     static int playerPosX;
@@ -96,13 +99,13 @@ void DonkeyKongGame::printPoints(String value, unsigned int *prevScore, byte *pr
 
     unsigned int currentScore = *score.getCurrentScore();
 
-    if (*prevScore == 0 && *prevScoreSet == 0)
+    if (prevScore == 0 && prevScoreSet == 0)
     {
-        *prevScoreSet = 1;
-        *prevScore = currentScore;
+        prevScoreSet = 1;
+        prevScore = currentScore;
     }
 
-    if (*prevScore != currentScore)
+    if (prevScore != currentScore)
     {
         printPoints = true;
         showPointsFrameCounter = 0;
@@ -121,7 +124,7 @@ void DonkeyKongGame::printPoints(String value, unsigned int *prevScore, byte *pr
         showPointsFrameCounter = 60;
     }
 
-    *prevScore = currentScore;
+    prevScore = currentScore;
 }
 
 void DonkeyKongGame::printDefaultUI()

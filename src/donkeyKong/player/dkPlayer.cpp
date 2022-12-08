@@ -86,6 +86,11 @@ void DK_Player::movement()
     prevPlayerPositionY = playerPositionY;
 
     renderSprites();
+
+    Serial.print("Player x: ");
+    Serial.print(playerPositionX);
+    Serial.print(", Player y: ");
+    Serial.println(playerPositionY);
 }
 
 void DK_Player::renderSprites()

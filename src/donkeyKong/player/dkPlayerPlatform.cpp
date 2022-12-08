@@ -79,31 +79,30 @@ void DK_PlayerPlatform::changePlatformY()
     int sixthPlatformYValue = 162;
 
     int seventhFloorLatterTop = 36;
-    int seventhPlatformYValue = 188;
 
     // First floor
     moveOnPlatform(firstFloorY, latterX, firstFloorSlopeStartX, firstPlatformYValue, 5, 1, 1);
-    climbLatter(latterX[0], latterX[1], secondFloorLatterTop, secondPlatformYValue, 0);
+    climbLatter(latterX[0], latterX[1], secondFloorLatterTop, 0);
 
     // Second floor
     moveOnPlatform(secondFloorY, secondLatterX, secondFloorSlopeStartX, secondPlatformYValue, 6, 1, 0);
-    climbLatter(secondLatterX[0], secondLatterX[1], thirdFloorLatterTop, thirdPlatformYValue, 1);
+    climbLatter(secondLatterX[0], secondLatterX[1], thirdFloorLatterTop, 1);
 
     // Third floor
     moveOnPlatform(thirdFloorY, thirdLatterX, thirdFloorSlopeStartX, thirdPlatformYValue, 5, 1, 1);
-    climbLatter(thirdLatterX[0], thirdLatterX[1], fourthFloorLatterTop, fourthPlatformYValue, 2);
+    climbLatter(thirdLatterX[0], thirdLatterX[1], fourthFloorLatterTop, 2);
 
     // Fourth floor
     moveOnPlatform(fourthFloorY, fourthLatterX, fourthFloorSlopeStartX, fourthPlatformYValue, 5, 1, 0);
-    climbLatter(fourthLatterX[0], fourthLatterX[1], fifthFloorLatterTop, fifthPlatformYValue, 3);
+    climbLatter(fourthLatterX[0], fourthLatterX[1], fifthFloorLatterTop, 3);
 
     // Fifth floor
     moveOnPlatform(fifthFloorY, fifthLatterX, fifthFloorSlopeStartX, fifthPlatformYValue, 5, 1, 1);
-    climbLatter(fifthLatterX[0], fifthLatterX[1], sixthFloorLatterTop, sixthPlatformYValue, 4);
+    climbLatter(fifthLatterX[0], fifthLatterX[1], sixthFloorLatterTop, 4);
 
     // Sixth floor
     moveOnPlatform(sixthFloorY, sixthLatterX, sixthFloorSlopeStartX, sixthPlatformYValue, 5, -1, 1);
-    climbLatter(sixthLatterX[0], sixthLatterX[1], seventhFloorLatterTop, seventhPlatformYValue, 5);
+    climbLatter(sixthLatterX[0], sixthLatterX[1], seventhFloorLatterTop, 5);
 }
 
 void DK_PlayerPlatform::moveOnPlatform(int floorY[],
@@ -194,7 +193,7 @@ void DK_PlayerPlatform::moveOnPlatform(int floorY[],
     }
 }
 
-void DK_PlayerPlatform::climbLatter(int latterStart, int latterEnd, int latterTop, int newPlatformYValue, short floorLevel)
+void DK_PlayerPlatform::climbLatter(int latterStart, int latterEnd, int latterTop, short floorLevel)
 {
     if (climbLatterUp && playerCurrentFloor == floorLevel)
     {

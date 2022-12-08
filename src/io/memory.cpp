@@ -24,8 +24,17 @@ void Memory::initSD()
 
 void Memory::initSprite(String localGamePath, TFT_eSprite *sprite, SpriteImage *spriteImage)
 {
-    loadBitmapImage(&localGamePath, spriteImage);
-    setImageBytes(sprite, spriteImage);
+    Serial.println(*spriteImage->getFileSize());
+
+    if (*spriteImage->getFileSize() <= 0)
+    {
+        loadBitmapImage(&localGamePath, spriteImage);
+        setImageBytes(sprite, spriteImage);
+    }
+    else
+    {
+        Serial.println(F("Sprite image already initialized!"));
+    }
 }
 
 void Memory::loadBitmapImage(String *localGamePath, SpriteImage *spriteImage)

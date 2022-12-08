@@ -16,20 +16,26 @@ class DonkeyKongGame
 public:
     void init();
     void play();
-    void resetGame();
 
 private:
-    void printPoints(String value, unsigned int *prevScore, byte *prevScoreSet);
+    void resetGame();
+    void gameOver();
+    void printPoints(String value);
     void printDefaultUI();
     void printHighScores();
     void printPressToPlay();
 
     DK_Player player;
     DK_Boss boss;
+    DK_Barrel barrels[5];
     SpriteImage donkeyKongBackgroundImage;
     TFT_Text text;
 
+    int barrelAmount = 5;
     bool startGame = false;
+    byte playerHit;
+    unsigned int prevScore;
+    byte prevScoreSet = 0;
 };
 
 #endif
