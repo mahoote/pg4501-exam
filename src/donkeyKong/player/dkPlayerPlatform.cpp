@@ -31,6 +31,13 @@ void DK_PlayerPlatform::getPlayerValues(int *_playerPositionX,
     isGrounded = _isGrounded;
 }
 
+void DK_PlayerPlatform::reset()
+{
+    climbLatterUp = false;
+    frameCounter = 0;
+    playerCurrentFloor = 0;
+}
+
 void DK_PlayerPlatform::changePlatformY()
 {
     frameCounter++;

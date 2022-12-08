@@ -24,6 +24,7 @@ public:
     bool *getGravityEnabled();
     bool *getIsGrounded();
     bool *getIsJumping();
+    void reset();
 
 private:
     void moveOnPlatform(int floorY[],
@@ -50,7 +51,6 @@ private:
         *isJumping;
 
     bool climbLatterUp = false;
-    bool climbLatterDown = false;
     int frameCounter = 0;
     int playerCurrentFloor = 0;
 };

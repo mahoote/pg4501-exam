@@ -16,6 +16,7 @@ class DonkeyKongGame
 public:
     void init();
     void play();
+    void resetGame();
 
 private:
     void printDefaultUI();

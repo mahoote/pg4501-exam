@@ -1,45 +1,5 @@
 #include "donkeyKong/player/dkPlayer.h"
 
-int prevPlayerPositionX = 0,
-    prevPlayerPositionY = 0,
-    stickValueX,
-    stickValueY,
-    playerPlatformY = 0,
-    frameCounter = 0;
-
-unsigned int jumpCurrentValue = 0,
-             jumpMaxTime = 8;
-
-short gravity = 5,
-      jumpSpeed = 2,
-      playerSpeed = 2,
-      playerHeight,
-      playerWidth;
-
-short lastInputValueX = 1,
-      changeSpriteAfterFrames = 4;
-
-bool isGrounded = false, isJumping = false,
-     playerLeft = false, playerRight = false, playerUp = false, playerDown = false;
-
-TFT_eSprite marioIdleLeftSprite = TFT_eSprite(display.getTft());
-TFT_eSprite marioIdleRightSprite = TFT_eSprite(display.getTft());
-TFT_eSprite marioWalkLeftSprite = TFT_eSprite(display.getTft());
-TFT_eSprite marioWalkRightSprite = TFT_eSprite(display.getTft());
-TFT_eSprite marioJumpLeftSprite = TFT_eSprite(display.getTft());
-TFT_eSprite marioJumpRightSprite = TFT_eSprite(display.getTft());
-
-SpriteImage *currentSpriteImage;
-
-SpriteImage marioIdleRightSpriteImage,
-    marioIdleLeftSpriteImage,
-    marioWalkLeftSpriteImage,
-    marioWalkRightSpriteImage,
-    marioJumpLeftSpriteImage,
-    marioJumpRightSpriteImage;
-
-DK_PlayerPlatform playerPlatform;
-
 void DK_Player::init()
 {
     memory.initSprite("/Donkey_Kong_Game/Mario/Mario_Idle_Right", &marioIdleRightSprite, &marioIdleRightSpriteImage);
@@ -48,6 +8,34 @@ void DK_Player::init()
     memory.initSprite("/Donkey_Kong_Game/Mario/Mario_Walk_Left", &marioWalkLeftSprite, &marioWalkLeftSpriteImage);
     memory.initSprite("/Donkey_Kong_Game/Mario/Mario_Jump_Left", &marioJumpLeftSprite, &marioJumpLeftSpriteImage);
     memory.initSprite("/Donkey_Kong_Game/Mario/Mario_Jump_Right", &marioJumpRightSprite, &marioJumpRightSpriteImage);
+}
+
+void DK_Player::reset()
+{
+    playerPlatform.reset();
+
+    isGrounded = false;
+    isJumping = false;
+    playerLeft = false;
+    playerRight = false;
+    playerUp = false;
+    playerDown = false;
+
+    isMoving = false;
+    isMovingX = false;
+    isMovingY = false;
+    gravityEnabled = true;
+
+    playerPositionX = 0;
+    playerPositionY = 0;
+    addPlatformYValue = 8;
+
+    prevPlayerPositionX = 0;
+    prevPlayerPositionY = 0;
+    stickValueX = 0;
+    stickValueY = 0;
+    playerPlatformY = 0;
+    frameCounter = 0;
 }
 
 void DK_Player::movement()

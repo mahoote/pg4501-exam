@@ -9,8 +9,10 @@ class DK_Barrel
 {
 public:
     void init();
+    void reset();
     void dropBarrel(DK_Player *player, byte *playerHit);
-    bool playerCollision(int barrelX, int barrelY, int *playerX, int *playerY, short *playerWidth, short *playerHeight);
+    bool playerCollision(int *playerX, int *playerY, short *playerWidth, short *playerHeight,
+                         int *barrelX, int *barrelY, short *barrelWidth, short *barrelHeight);
 
 private:
     void randomPositionX(int *positionX);

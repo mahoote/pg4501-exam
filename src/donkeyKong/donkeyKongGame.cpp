@@ -13,19 +13,15 @@ void DonkeyKongGame::init()
     TFT_eSprite *screenSprite = display.getScreenSprite();
 
     memory.initSD();
-    boss.init();
-    player.init();
-
     memory.initSprite("/Donkey_Kong_Game/Donkey_Kong_Background_2", screenSprite, &donkeyKongBackgroundImage);
     screenSprite->setSwapBytes(true);
 
+    player.init();
+    boss.init();
     for (int i = 0; i < barrelAmount; i++)
     {
         barrels[i].init();
     }
-
-    // barrel.init();
-    // barrelTwo.init();
 }
 
 void DonkeyKongGame::play()
@@ -67,12 +63,22 @@ void DonkeyKongGame::play()
         {
             playerHit = 0;
             startGame = false;
+            resetGame();
         }
     }
 
     printDefaultUI();
 
     screenSprite->pushSprite(0, 0);
+}
+
+void DonkeyKongGame::resetGame()
+{
+    player.reset();
+    for (int i = 0; i < barrelAmount; i++)
+    {
+        barrels[i].reset();
+    }
 }
 
 void DonkeyKongGame::printDefaultUI()
