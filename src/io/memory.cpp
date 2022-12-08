@@ -102,3 +102,8 @@ File32 Memory::readFile(String filePath)
 {
     return sd.open(filePath, O_READ);
 }
+
+File32 Memory::writeFile(String filePath)
+{
+    return sd.open(filePath, O_WRITE);
+}

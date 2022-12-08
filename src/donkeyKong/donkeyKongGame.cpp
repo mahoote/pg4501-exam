@@ -15,19 +15,15 @@ void DonkeyKongGame::init()
     player.init();
     boss.init();
 
-    int scoreSize = 0;
-    int *scores;
-    scoreFile.getScoresFromFile(&scores, &scoreSize);
+    scoreFile.saveScoreToFile(1234);
 
-    Serial.print("Scores size: ");
-    Serial.println(scoreSize);
+    int *scoreSize = score.getScoreListSize();
+    int **scores = score.getScores();
+    scoreFile.getScoresFromFile(scores, scoreSize);
 
-    sorter.bubbleSort(scores, scoreSize);
+    sorter.bubbleSort(*scores, *scoreSize);
 
-    for (int i = 0; i < scoreSize; i++)
-    {
-        Serial.println(scores[i]);
-    }
+    score.setHighScore((*scores)[0]);
 }
 
 void DonkeyKongGame::play()
@@ -64,9 +60,9 @@ void DonkeyKongGame::play()
         }
         else if (*player.getPositionY() <= 36 && *player.getPositionX() > 60 && *player.getPositionX() < 90)
         {
+            score.addCurrentScore(*score.getBonus());
             resetGame();
             levelCounter++;
-            score.addCurrentScore(*score.getBonus());
             prevScore = *score.getCurrentScore();
             barrelAmount = barrelAmount + 2;
         }
@@ -198,6 +194,8 @@ void DonkeyKongGame::printDefaultUI()
 
 void DonkeyKongGame::printHighScores()
 {
+    int *scores = *score.getScores();
+
     text.writeText("RANK", 3, 100, TFT_LIGHT_BLUE, 1);
     text.writeText("1ST", 3, 123, TFT_RED, 2);
     text.writeText("2ND", 3, 146, TFT_RED, 2);
@@ -206,11 +204,21 @@ void DonkeyKongGame::printHighScores()
     text.writeText("5TH", 3, 215, TFT_YELLOW, 2);
 
     text.writeText("SCORE", 58, 100, TFT_LIGHT_BLUE, 1);
-    text.writeText("000000", 58, 123, TFT_RED, 2);
-    text.writeText("000000", 58, 146, TFT_RED, 2);
-    text.writeText("000000", 58, 169, TFT_RED, 2);
-    text.writeText("000000", 58, 192, TFT_YELLOW, 2);
-    text.writeText("000000", 58, 215, TFT_YELLOW, 2);
+
+    String scoreString1 = text.leadingZerosString(6, scores[0]);
+    text.writeText(scoreString1, 58, 123, TFT_RED, 2);
+
+    String ScoreString2 = text.leadingZerosString(6, scores[1]);
+    text.writeText(ScoreString2, 58, 146, TFT_RED, 2);
+
+    String scoreString3 = text.leadingZerosString(6, scores[2]);
+    text.writeText(scoreString3, 58, 169, TFT_RED, 2);
+
+    String scoreString4 = text.leadingZerosString(6, scores[3]);
+    text.writeText(scoreString4, 58, 192, TFT_YELLOW, 2);
+
+    String scoreString5 = text.leadingZerosString(6, scores[4]);
+    text.writeText(scoreString5, 58, 215, TFT_YELLOW, 2);
 }
 
 void DonkeyKongGame::printPressToPlay()

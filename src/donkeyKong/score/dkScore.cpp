@@ -63,3 +63,18 @@ unsigned int *DK_Score::getHighScore()
 {
     return &highScore;
 }
+
+void DK_Score::setHighScore(unsigned int _score)
+{
+    highScore = _score;
+}
+
+int **DK_Score::getScores()
+{
+    return &scores;
+}
+
+int *DK_Score::getScoreListSize()
+{
+    return &scoreListSize;
+}

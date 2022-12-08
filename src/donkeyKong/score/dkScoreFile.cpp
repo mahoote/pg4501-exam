@@ -1,5 +1,22 @@
 #include "donkeyKong/score/dkScoreFile.h"
 
+void DK_ScoreFile::saveScoreToFile(int _score)
+{
+    File32 scoreFile = memory.writeFile("/pg4501_exam/Donkey_Kong_Game/Donkey_Kong_Scores.txt");
+
+    if (scoreFile)
+    {
+        scoreFile.seekSet(scoreFile.fileSize());
+        scoreFile.print("\n");
+        scoreFile.print(_score);
+        scoreFile.close();
+    }
+    else
+    {
+        Serial.println(F("Error opening file!"));
+    }
+}
+
 void DK_ScoreFile::getScoresFromFile(int **scores, int *size)
 {
     File32 scoreFile = memory.readFile("/pg4501_exam/Donkey_Kong_Game/Donkey_Kong_Scores.txt");

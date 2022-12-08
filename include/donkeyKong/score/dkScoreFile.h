@@ -8,6 +8,7 @@ class DK_ScoreFile
 {
 public:
     void getScoresFromFile(int **scores, int *size);
+    void saveScoreToFile(int _score);
 
 private:
     int scoresAmount = 0;
