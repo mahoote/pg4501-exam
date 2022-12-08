@@ -14,6 +14,18 @@ void DonkeyKongGame::init()
 
     player.init();
     boss.init();
+
+    int scoreSize = 0;
+    int *scores;
+    scoreFile.getScoresFromFile(&scores, &scoreSize);
+
+    Serial.print("Scores size: ");
+    Serial.println(scoreSize);
+
+    for (int i = 0; i < scoreSize; i++)
+    {
+        Serial.println(scores[i]);
+    }
 }
 
 void DonkeyKongGame::play()

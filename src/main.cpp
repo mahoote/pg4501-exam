@@ -7,7 +7,7 @@
 #include "main.h"
 #include "donkeyKong/donkeyKongGame.h"
 
-Memory memory("/pg4501_exam/Sprites");
+Memory memory("/pg4501_exam");
 Display display;
 Joystick joystick;
 FPS fps;

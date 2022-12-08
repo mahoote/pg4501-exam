@@ -19,13 +19,11 @@ void Memory::initSD()
             ; // Fatal error, do not continue
     }
 
-    Serial.println(F("OK!"));
+    Serial.println(F("SD OK!"));
 }
 
 void Memory::initSprite(String localGamePath, TFT_eSprite *sprite, SpriteImage *spriteImage)
 {
-    Serial.println(*spriteImage->getFileSize());
-
     if (*spriteImage->getFileSize() <= 0)
     {
         loadBitmapImage(&localGamePath, spriteImage);
@@ -41,9 +39,6 @@ void Memory::loadBitmapImage(String *localGamePath, SpriteImage *spriteImage)
 {
     String fileType = ".bmp";
     String imagePath = sdSpriteGamePath + *localGamePath + fileType;
-
-    Serial.print(F("Image path: "));
-    Serial.println(imagePath);
 
     int imagePathLength = imagePath.length() + 1;
     char pszImagePath[imagePathLength];
@@ -78,7 +73,6 @@ void Memory::setImageBytes(TFT_eSprite *sprite, SpriteImage *spriteImage)
         spriteImage->setHeight(image->height());
 
         sprite->createSprite(*spriteImage->getWidth(), *spriteImage->getHeight());
-        // sprite->setSwapBytes(true);
 
         if (getImageCanvasFormat(image) == 3)
         {
@@ -102,4 +96,9 @@ String *Memory::getSdSpriteGamePath()
 void Memory::setSdSpriteGamePath(String path)
 {
     sdSpriteGamePath = path;
+}
+
+File32 Memory::readFile(String filePath)
+{
+    return sd.open(filePath, O_READ);
 }

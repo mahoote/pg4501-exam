@@ -14,6 +14,7 @@ public:
     void initSprite(String localGamePath, TFT_eSprite *sprite, SpriteImage *spriteImage);
     String *getSdSpriteGamePath();
     void setSdSpriteGamePath(String path);
+    File32 readFile(String filePath);
 
 private:
     void loadBitmapImage(String *localGamePath, SpriteImage *spriteImage);
