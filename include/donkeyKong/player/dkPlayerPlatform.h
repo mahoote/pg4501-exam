@@ -1,5 +1,7 @@
 #include <Arduino.h>
 
+#include "donkeyKong/score/dkScoreBoard.h"
+
 #ifndef __DK_PLAYER_PLATFORM_H__
 #define __DK_PLAYER_PLATFORM_H__
 

@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include "main.h"
-#include "donkeyKong/dkPlayerPlatform.h"
+#include "donkeyKong/player/dkPlayerPlatform.h"
 
 #ifndef __DK_PLAYER_H__
 #define __DK_PLAYER_H__
@@ -10,6 +10,10 @@ class DK_Player
 public:
     void init();
     void movement();
+    int *getPositionX();
+    int *getPositionY();
+    short *getWidth();
+    short *getHeight();
 
 private:
     void moveDirectionX(TFT_eSprite *sprite[], SpriteImage *spriteImage[]);

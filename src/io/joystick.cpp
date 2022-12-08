@@ -43,3 +43,8 @@ int *Joystick::getStickValueY()
 {
     return &stickValueY;
 }
+
+int *Joystick::getButtonState()
+{
+    return &stickBtnState;
+}

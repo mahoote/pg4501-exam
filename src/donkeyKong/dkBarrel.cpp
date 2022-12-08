@@ -8,7 +8,7 @@ void DK_Barrel::init()
     startDropBarrelFrame = random(800);
 }
 
-void DK_Barrel::dropBarrel()
+void DK_Barrel::dropBarrel(DK_Player *player, byte *playerHit)
 {
     if (frameCounter < startDropBarrelFrame)
     {
@@ -28,6 +28,14 @@ void DK_Barrel::dropBarrel()
 
         display.drawImageToScreen(&barrelPositionX, &barrelPositionY, &barrelSprite, &barrelSpriteImage);
     }
+
+    if (playerCollision(barrelPositionX, barrelPositionY,
+                        player->getPositionX(), player->getPositionY(),
+                        player->getWidth(), player->getHeight()))
+    {
+        Serial.println("Hit player!");
+        *playerHit = 1;
+    }
 }
 
 void DK_Barrel::randomPositionY(int *positionY)
@@ -38,4 +46,18 @@ void DK_Barrel::randomPositionY(int *positionY)
 void DK_Barrel::randomPositionX(int *positionX)
 {
     *positionX = random(SCREEN_WIDTH - 35) + 10;
+}
+
+bool DK_Barrel::playerCollision(int barrelX, int barrelY, int *playerX, int *playerY, short *playerWidth, short *playerHeight)
+{
+    boolean result = false;
+
+    if ((barrelX >= *playerX && barrelX <= (*playerX + *playerWidth)) &&
+
+        (barrelY >= *playerY && barrelY <= (*playerY + *playerHeight)))
+    {
+        result = true;
+    }
+
+    return result;
 }

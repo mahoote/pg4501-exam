@@ -4,7 +4,7 @@
     like he is walking on the platforms.
    ================================================== */
 
-#include "donkeyKong/dkPlayerPlatform.h"
+#include "donkeyKong/player/dkPlayerPlatform.h"
 
 void DK_PlayerPlatform::getPlayerValues(int *_playerPositionX,
                                         int *_playerPositionY,
@@ -193,6 +193,7 @@ void DK_PlayerPlatform::climbLatter(int latterStart, int latterEnd, int latterTo
         }
         else
         {
+            score.addCurrentScore(100);
             climbLatterUp = false;
             *gravityEnabled = true;
             playerCurrentFloor++;

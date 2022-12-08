@@ -1,4 +1,4 @@
-#include "donkeyKong/dkPlayer.h"
+#include "donkeyKong/player/dkPlayer.h"
 
 int prevPlayerPositionX = 0,
     prevPlayerPositionY = 0,
@@ -248,4 +248,24 @@ void DK_Player::timeInAirDelay()
         isJumping = false;
         jumpCurrentValue = 0;
     }
+}
+
+int *DK_Player::getPositionX()
+{
+    return &playerPositionX;
+}
+
+int *DK_Player::getPositionY()
+{
+    return &playerPositionY;
+}
+
+short *DK_Player::getWidth()
+{
+    return &playerHeight;
+}
+
+short *DK_Player::getHeight()
+{
+    return &playerWidth;
 }

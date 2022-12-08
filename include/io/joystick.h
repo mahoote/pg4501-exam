@@ -10,6 +10,7 @@ public:
     void setJoystickValues();
     int *getStickValueX();
     int *getStickValueY();
+    int *getButtonState();
 
 private:
     int stickValueX = 0;
