@@ -14,16 +14,6 @@ void DonkeyKongGame::init()
 
     player.init();
     boss.init();
-
-    scoreFile.saveScoreToFile(1234);
-
-    int *scoreSize = score.getScoreListSize();
-    int **scores = score.getScores();
-    scoreFile.getScoresFromFile(scores, scoreSize);
-
-    sorter.bubbleSort(*scores, *scoreSize);
-
-    score.setHighScore((*scores)[0]);
 }
 
 void DonkeyKongGame::play()
@@ -35,6 +25,20 @@ void DonkeyKongGame::play()
     // Menu
     if (!startGame)
     {
+        if (initMenu)
+        {
+            initMenu = false;
+
+            score.resetBonus();
+            score.resetCurrentScore();
+
+            int *scoreSize = score.getScoreListSize();
+            int **scores = score.getScores();
+            scoreFile.getScoresFromFile(scores, scoreSize);
+            sorter.bubbleSort(*scores, *scoreSize);
+            score.setHighScore((*scores)[0]);
+        }
+
         printPressToPlay();
         printHighScores();
 
@@ -42,9 +46,6 @@ void DonkeyKongGame::play()
         {
             startGame = true;
         }
-
-        score.resetBonus();
-        score.resetCurrentScore();
     }
     // In game
     else
@@ -56,6 +57,7 @@ void DonkeyKongGame::play()
 
         if (playerHit != 0)
         {
+            scoreFile.saveScoreToFile(*score.getCurrentScore());
             gameOver();
         }
         else if (*player.getPositionY() <= 36 && *player.getPositionX() > 60 && *player.getPositionX() < 90)
@@ -111,6 +113,7 @@ void DonkeyKongGame::createBarrels()
 
 void DonkeyKongGame::gameOver()
 {
+    initMenu = true;
     startGame = false;
     prevScore = 0;
     prevScoreSet = 0;

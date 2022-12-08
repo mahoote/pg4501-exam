@@ -39,6 +39,7 @@ private:
     TFT_Text text;
 
     bool startGame = false;
+    bool initMenu = true;
     byte playerHit;
     unsigned int prevScore;
     byte prevScoreSet = 0;
