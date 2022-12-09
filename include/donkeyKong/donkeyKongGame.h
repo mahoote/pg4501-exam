@@ -6,6 +6,7 @@
 #include "donkeyKong/player/dkPlayer.h"
 #include "donkeyKong/dkBarrel.h"
 #include "donkeyKong/dkBoss.h"
+#include "donkeyKong/dkPrincess.h"
 #include "donkeyKong/score/dkScoreBoard.h"
 #include "donkeyKong/score/dkScoreFile.h"
 #include "array/sorter.h"
@@ -30,12 +31,14 @@ private:
     void showLoadingScreen(TFT_eSprite *screenSprite);
     void showGameOverScreen(TFT_eSprite *screenSprite);
 
-    int barrelAmount = 5;
+    int defaultBarrelAmount = 3;
+    int barrelAmount;
 
     Sorter sorter;
     DK_ScoreFile scoreFile;
     DK_Player player;
     DK_Boss boss;
+    DK_Princess princess;
     DK_Barrel **barrels;
     SpriteImage donkeyKongBackgroundImage;
     TFT_Text text;

@@ -14,6 +14,7 @@ void DonkeyKongGame::init()
 
     player.init();
     boss.init();
+    princess.init();
 }
 
 void DonkeyKongGame::play()
@@ -40,6 +41,7 @@ void DonkeyKongGame::play()
 
             showLoader = true;
             showGameOver = false;
+            barrelAmount = defaultBarrelAmount;
         }
 
         printPressToPlay();
@@ -88,6 +90,7 @@ void DonkeyKongGame::play()
 
             player.movement();
             boss.drawBoss();
+            princess.drawPrincess();
 
             for (int i = 0; i < barrelAmount; i++)
             {
@@ -118,11 +121,11 @@ void DonkeyKongGame::showGameOverScreen(TFT_eSprite *screenSprite)
         screenSprite->fillSprite(TFT_BLACK);
         if (frameCounter >= 20)
         {
-            text.writeText("GAME", 30, 100, TFT_RED, 3);
+            text.writeText("GAME", 33, 100, TFT_RED, 3);
         }
         if (frameCounter >= 50)
         {
-            text.writeText("OVER", 30, 140, TFT_RED, 3);
+            text.writeText("OVER", 33, 140, TFT_RED, 3);
         }
     }
     else
@@ -174,7 +177,7 @@ void DonkeyKongGame::gameOver()
     prevScore = 0;
     prevScoreSet = 0;
     playerHit = 0;
-    barrelAmount = 5;
+    barrelAmount = defaultBarrelAmount;
     levelCounter = 0;
 }
 
