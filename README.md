@@ -50,19 +50,19 @@ Header files
 
 ### Libraries
 
-- TFT_eSPI by Bodmer
-- TJpg_Decoder by Bodmer
-- JPEGDecoder by Bodmer
-- PNGdec by Larry Bank
+- bodmer/TFT_eSPI@^2.4.79
+- adafruit/Adafruit ImageReader Library@^2.9.0
+- adafruit/SdFat - Adafruit Fork@^2.2.1
 
+### Code
+
+[FPS](https://www.youtube.com/watch?v=4cwpXJIHaMo&ab_channel=MakingGamesWithBen)<br>
+[Collision detection](https://docs.arduino.cc/library-examples/tft-library/TFTPong)<br>
 [Joystick logic](https://create.arduino.cc/projecthub/MisterBotBreak/how-to-use-a-joystick-with-serial-monitor-1f04f0)<br>
-[Transparent Sprites - Programming Tutorial (TFT_eSPI library)](https://www.youtube.com/watch?v=U4jOFLFNZBI&t=1002s&ab_channel=VolosProjects)
+[Transparent Sprites - Programming Tutorial (TFT_eSPI library)](https://www.youtube.com/watch?v=U4jOFLFNZBI&t=1002s&ab_channel=VolosProjects)<br>
 
 ### Inspiration
 
 [Arduino - How to Split a Program Into Different Files](https://www.youtube.com/watch?v=BdstuZP6l5E&ab_channel=RoboticsBack-End)<br>
 [Arcade Donkey Kong](https://www.youtube.com/watch?v=UBHJhla8TO4&t=89s&ab_channel=WorldofLongplays)<br>
-[Mario sprites](https://www.mariowiki.com/Gallery:Mario_sprites_and_models)<br>
 [Donkey Kong Sprites](https://www.spriters-resource.com/fullview/45989/)<br>
-[FPS](https://www.youtube.com/watch?v=4cwpXJIHaMo&ab_channel=MakingGamesWithBen)<br>
-[Collision detection](https://docs.arduino.cc/library-examples/tft-library/TFTPong)<br>

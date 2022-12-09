@@ -32,7 +32,7 @@ private:
         // How mutch the player position Y should increase or decrease.
         addPlatformYValue = 8;
 
-    bool isMoving, isMovingX, isMovingY, gravityEnabled = true;
+    bool isMoving, isMovingX, isMovingY, gravityEnabled = true, canMove = false;
 
     int prevPlayerPositionX = 0,
         prevPlayerPositionY = 0,

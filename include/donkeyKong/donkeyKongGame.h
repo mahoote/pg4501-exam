@@ -27,6 +27,8 @@ private:
     void printDefaultUI();
     void printHighScores();
     void printPressToPlay();
+    void showLoadingScreen(TFT_eSprite *screenSprite);
+    void showGameOverScreen(TFT_eSprite *screenSprite);
 
     int barrelAmount = 5;
 
@@ -38,6 +40,8 @@ private:
     SpriteImage donkeyKongBackgroundImage;
     TFT_Text text;
 
+    bool showLoader = true;
+    bool showGameOver = false;
     bool startGame = false;
     bool initMenu = true;
     byte playerHit;

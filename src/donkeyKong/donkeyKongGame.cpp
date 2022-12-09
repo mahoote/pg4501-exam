@@ -1,5 +1,3 @@
-/* TODO: screenSizeHeight - MARIO_SIZE_Y make variable */
-
 #include "donkeyKong/donkeyKongGame.h"
 
 bool initBarrels = true;
@@ -11,7 +9,7 @@ void DonkeyKongGame::init()
     memory.initSD();
     scoreFile.initFile();
 
-    memory.initSprite("/Donkey_Kong_Game/Donkey_Kong_Background_2", screenSprite, &donkeyKongBackgroundImage);
+    memory.initSprite("/Donkey_Kong_Game/Background/Donkey_Kong_Background", screenSprite, &donkeyKongBackgroundImage);
     screenSprite->setSwapBytes(true);
 
     player.init();
@@ -39,6 +37,9 @@ void DonkeyKongGame::play()
             scoreFile.getScoresFromFile(scores, scoreSize);
             sorter.bubbleSort(*scores, *scoreSize);
             score.setHighScore((*scores)[0]);
+
+            showLoader = true;
+            showGameOver = false;
         }
 
         printPressToPlay();
@@ -57,18 +58,28 @@ void DonkeyKongGame::play()
 
         createBarrels();
 
-        if (playerHit != 0)
+        if (showGameOver)
+        {
+            showGameOverScreen(screenSprite);
+        }
+        else if (playerHit != 0)
         {
             scoreFile.saveScoreToFile(*score.getCurrentScore());
-            gameOver();
+            resetGame();
+            showGameOver = true;
         }
         else if (*player.getPositionY() <= 36 && *player.getPositionX() > 60 && *player.getPositionX() < 90)
         {
+            showLoader = true;
             score.addCurrentScore(*score.getBonus());
             resetGame();
             levelCounter++;
             prevScore = *score.getCurrentScore();
             barrelAmount = barrelAmount + 2;
+        }
+        else if (showLoader)
+        {
+            showLoadingScreen(screenSprite);
         }
         // Gameplay
         else
@@ -97,6 +108,49 @@ void DonkeyKongGame::play()
     screenSprite->pushSprite(0, 0);
 }
 
+void DonkeyKongGame::showGameOverScreen(TFT_eSprite *screenSprite)
+{
+    static int frameCounter = 0;
+    frameCounter++;
+
+    if (frameCounter < (30 * 3))
+    {
+        screenSprite->fillSprite(TFT_BLACK);
+        if (frameCounter >= 20)
+        {
+            text.writeText("GAME", 30, 100, TFT_RED, 3);
+        }
+        if (frameCounter >= 50)
+        {
+            text.writeText("OVER", 30, 140, TFT_RED, 3);
+        }
+    }
+    else
+    {
+        frameCounter = 0;
+        showGameOver = false;
+        gameOver();
+    }
+}
+
+void DonkeyKongGame::showLoadingScreen(TFT_eSprite *screenSprite)
+{
+    static int frameCounter = 0;
+    frameCounter++;
+
+    if (frameCounter < (30 * 2))
+    {
+        screenSprite->fillSprite(TFT_BLACK);
+        text.writeText("LEVEL", 25, 100, TFT_LIGHT_BLUE, 3);
+        text.writeText(String(levelCounter), 60, 140, TFT_LIGHT_BLUE, 3);
+    }
+    else
+    {
+        frameCounter = 0;
+        showLoader = false;
+    }
+}
+
 void DonkeyKongGame::createBarrels()
 {
     // Create all the instances of the barrel based on the amount.
@@ -122,7 +176,6 @@ void DonkeyKongGame::gameOver()
     playerHit = 0;
     barrelAmount = 5;
     levelCounter = 0;
-    resetGame();
 }
 
 void DonkeyKongGame::resetGame()

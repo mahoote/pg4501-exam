@@ -21,6 +21,7 @@ void DK_Player::reset()
     playerUp = false;
     playerDown = false;
 
+    canMove = false;
     isMoving = false;
     isMovingX = false;
     isMovingY = false;
@@ -40,6 +41,16 @@ void DK_Player::reset()
 
 void DK_Player::movement()
 {
+    if (!canMove)
+    {
+        // Player must reach start position before being able to move.
+        if (playerPositionY > 200)
+        {
+            Serial.println("Player can move!");
+            canMove = true;
+        }
+    }
+
     playerPlatform.getPlayerValues(&playerPositionX, &playerPositionY, &addPlatformYValue,
                                    &isMovingX, &isMovingY, &playerLeft, &playerRight, &playerUp,
                                    &gravityEnabled, &isGrounded, &isJumping);
@@ -117,7 +128,7 @@ void DK_Player::renderSprites()
 
         moveDirectionX(sprites, spriteImages);
     }
-    // Something is wrong
+    // Something is wrong.
     else
     {
         drawSprite(&marioIdleRightSprite, &marioIdleRightSpriteImage);
@@ -155,15 +166,18 @@ void DK_Player::drawSprite(TFT_eSprite *sprite, SpriteImage *spriteImage)
 
 void DK_Player::movementHorizontally()
 {
-    // Right
-    if (stickValueX > 0 && playerPositionX < SCREEN_WIDTH - playerWidth)
+    if (canMove)
     {
-        playerPositionX = playerPositionX + playerSpeed;
-    }
-    // Left
-    else if (stickValueX < 0 && playerPositionX > 0)
-    {
-        playerPositionX = playerPositionX - playerSpeed;
+        // Right
+        if (stickValueX > 0 && playerPositionX < SCREEN_WIDTH - playerWidth)
+        {
+            playerPositionX = playerPositionX + playerSpeed;
+        }
+        // Left
+        else if (stickValueX < 0 && playerPositionX > 0)
+        {
+            playerPositionX = playerPositionX - playerSpeed;
+        }
     }
 }
 
@@ -227,7 +241,7 @@ void DK_Player::enableGravity()
 
 void DK_Player::timeInAirDelay()
 {
-    // Move player up
+    // Move player up.
     playerPositionY = playerPositionY - jumpSpeed;
 
     if (jumpCurrentValue++ >= jumpMaxTime)
