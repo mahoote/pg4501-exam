@@ -19,6 +19,8 @@ void DonkeyKongGame::init()
 
 void DonkeyKongGame::play()
 {
+    static bool startSong = true;
+
     TFT_eSprite *screenSprite = display.getScreenSprite();
     joystick.setJoystickValues();
     screenSprite->fillSprite(TFT_BLACK);
@@ -62,6 +64,13 @@ void DonkeyKongGame::play()
 
         if (showGameOver)
         {
+            if (startSong)
+            {
+                dkSound.resetStartTones();
+                startSong = false;
+            }
+
+            dkSound.playGameOver();
             showGameOverScreen(screenSprite);
         }
         else if (playerHit != 0)
@@ -81,11 +90,21 @@ void DonkeyKongGame::play()
         }
         else if (showLoader)
         {
+            if (startSong)
+            {
+                dkSound.resetStartTones();
+                startSong = false;
+            }
+
+            dkSound.playLoading();
             showLoadingScreen(screenSprite);
         }
         // Gameplay
         else
         {
+            startSong = true;
+            dkSound.playBackgroundMusic();
+
             screenSprite->pushImage(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, *donkeyKongBackgroundImage.getBuffer());
 
             player.movement();

@@ -10,6 +10,7 @@
 #include "donkeyKong/score/dkScoreBoard.h"
 #include "donkeyKong/score/dkScoreFile.h"
 #include "array/sorter.h"
+#include "sound/donkeyKongSound.h"
 
 #ifndef __DONKEY_KONG_GAME_H__
 #define __DONKEY_KONG_GAME_H__
@@ -42,6 +43,7 @@ private:
     DK_Barrel **barrels;
     SpriteImage donkeyKongBackgroundImage;
     TFT_Text text;
+    DonkeyKongSound dkSound;
 
     bool showLoader = true;
     bool showGameOver = false;
