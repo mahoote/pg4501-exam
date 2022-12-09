@@ -46,7 +46,6 @@ void DK_Player::movement()
         // Player must reach start position before being able to move.
         if (playerPositionY > 200)
         {
-            Serial.println("Player can move!");
             canMove = true;
         }
     }
