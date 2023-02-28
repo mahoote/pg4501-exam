@@ -17,3 +17,7 @@ with own results.
 
 _Play Donkey Kong as Mario and try to save the princess without getting crushed
 of raining barrels!_
+
+## Wiring diagram of the game console
+
+![Wiring diagram](./Wiring_diagram_bb.png)
